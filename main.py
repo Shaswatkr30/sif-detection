@@ -16,6 +16,7 @@ from classifier import (
 from recommendation import get_recommendation
 
 from text_preprocessor import normalize_text
+
 from fastapi.staticfiles import StaticFiles
 
 # Create database tables
@@ -435,3 +436,153 @@ app.mount(
     StaticFiles(directory="frontend", html=True),
     name="dashboard"
 )
+@app.post("/analyze")
+def analyze_report(
+    report: ReportCreate,
+    db: Session = Depends(get_db)
+):
+
+    # ======================================
+    # 1. ORIGINAL INPUT
+    # ======================================
+
+    original_text = report.report_text.strip()
+
+    if not original_text:
+        raise HTTPException(
+            status_code=400,
+            detail="Report text cannot be empty"
+        )
+
+
+    # ======================================
+    # 2. TEXT PREPROCESSING
+    # ======================================
+
+    processed_text = normalize_text(original_text)
+
+
+    # ======================================
+    # 3. AI ANALYSIS
+    # ======================================
+
+    ai_result = analyze_text(processed_text)
+
+
+    # ======================================
+    # 4. KEYWORD DETECTION
+    # ======================================
+
+    keyword_result = detect_keywords(processed_text)
+
+    detected_precursors = []
+
+    for item in keyword_result:
+
+        detected_precursors.append({
+            "precursor": item["category"],
+            "keywords": item["keywords"]
+        })
+
+
+    # ======================================
+    # 5. RISK CALCULATION
+    # ======================================
+
+    risk_level = calculate_risk(
+        detected_precursors,
+        processed_text
+    )
+
+
+    # ======================================
+    # 6. INVALID INPUT
+    # ======================================
+
+    if risk_level == "INVALID":
+
+        return {
+            "status": "invalid",
+            "message": "Please enter a valid oil & gas safety report.",
+            "risk_level": "INVALID",
+            "primary_precursor": "Not applicable",
+            "detected_precursors": [],
+            "recommendation": (
+                "Enter a valid oil & gas safety "
+                "incident, hazard, or observation."
+            )
+        }
+
+
+    # ======================================
+    # 7. PRIMARY PRECURSOR
+    # ======================================
+
+    if detected_precursors:
+
+        primary_precursor = (
+            detected_precursors[0]["precursor"]
+        )
+
+    else:
+
+        primary_precursor = (
+            "No significant safety precursor"
+        )
+
+
+    # ======================================
+    # 8. RECOMMENDATION
+    # ======================================
+
+    recommendation = get_recommendation(
+        primary_precursor
+    )
+
+
+    # ======================================
+    # 9. SAVE TO DATABASE
+    # ======================================
+
+    new_report = models.Report(
+
+        report_text=original_text,
+
+        risk_level=risk_level,
+
+        primary_precursor=primary_precursor,
+
+        confidence="N/A"
+    )
+
+    db.add(new_report)
+
+    db.commit()
+
+    db.refresh(new_report)
+
+
+    # ======================================
+    # 10. RESPONSE
+    # ======================================
+
+    return {
+
+        "status": "success",
+
+        "report_id": new_report.id,
+
+        "original_text": original_text,
+
+        "processed_text": processed_text,
+
+        "risk_level": risk_level,
+
+        "primary_precursor": primary_precursor,
+
+        "detected_precursors": detected_precursors,
+
+        "recommendation": recommendation,
+
+        "ai_result": ai_result
+    }
