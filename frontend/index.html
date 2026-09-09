@@ -1,505 +1,1923 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIF Safety Dashboard</title>
+
+    <title>SIF Sentinel | Safety Intelligence Dashboard</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+
+        /* =========================
+           BASIC SETTINGS
+        ========================= */
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
         }
 
         body {
-            background: #f1f5f9;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
             color: #172033;
         }
 
-        header {
-            background: #172554;
+        button,
+        input,
+        textarea {
+            font-family: inherit;
+        }
+
+
+        /* =========================
+           MAIN APP
+        ========================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
             color: white;
-            padding: 25px 40px;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
         }
 
-        header h1 {
-            font-size: 28px;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 35px;
         }
 
-        header p {
-            margin-top: 6px;
+        .logo {
+            width: 45px;
+            height: 45px;
+            background: #2563eb;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .brand h2 {
+            font-size: 18px;
+        }
+
+        .brand small {
+            color: #9ca3af;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #d1d5db;
+            padding: 13px;
+            border-radius: 8px;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #1f2937;
+            color: white;
+        }
+
+        .side-note {
+            position: absolute;
+            bottom: 25px;
+            left: 20px;
+            right: 20px;
+
+            background: #1f2937;
+            border: 1px solid #374151;
+
+            padding: 15px;
+            border-radius: 10px;
+
+            font-size: 12px;
             color: #cbd5e1;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 25px;
         }
 
-        .cards {
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            font-size: 26px;
+        }
+
+        .topbar p {
+            margin-top: 6px;
+            color: #6b7280;
+        }
+
+        .status {
+            background: #dcfce7;
+            color: #166534;
+
+            padding: 9px 15px;
+            border-radius: 20px;
+
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .grid4 {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+
+            gap: 18px;
+            margin-bottom: 20px;
         }
 
         .card {
             background: white;
-            padding: 22px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
         }
 
-        .card h3 {
-            color: #64748b;
-            font-size: 15px;
+        .stat {
+            padding: 20px;
         }
 
-        .number {
+        .stat .label {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .stat .value {
             font-size: 32px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
-        .red {
-            color: #dc2626;
+        .stat .hint {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 5px;
         }
 
-        .orange {
-            color: #d97706;
-        }
-
-        .green {
-            color: #16a34a;
-        }
-
-        .box {
-            background: white;
-            margin-top: 25px;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.08);
-        }
-
-        textarea {
-            width: 100%;
-            height: 140px;
-            margin-top: 15px;
-            padding: 15px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 15px;
-            resize: vertical;
-        }
-
-        button {
-            margin-top: 15px;
-            padding: 12px 25px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        button:hover {
-            background: #1d4ed8;
-        }
-
-        #result {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .result-card {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 10px;
+        .total {
             border-left: 5px solid #2563eb;
         }
 
-        .result-card p {
-            margin: 12px 0;
+        .high {
+            border-left: 5px solid #dc2626;
         }
 
-        .recommendation {
-            background: #eff6ff;
+        .medium {
+            border-left: 5px solid #d97706;
+        }
+
+        .low {
+            border-left: 5px solid #16a34a;
+        }
+
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+
+        .sub {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+
+        /* =========================
+           TEXTAREA
+        ========================= */
+
+        textarea {
+            width: 100%;
+            min-height: 140px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+
             padding: 15px;
+
+            resize: vertical;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px #dbeafe;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .actions {
+            display: flex;
+            gap: 10px;
+
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
             border-radius: 8px;
+
+            padding: 11px 17px;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .ghost {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result {
+            display: none;
+
+            margin-top: 20px;
+            padding: 18px;
+
+            background: #fafafa;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .result-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge.HIGH {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge.MEDIUM {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge.LOW {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .result h3 {
             margin-top: 15px;
+            margin-bottom: 7px;
+        }
+
+        .result p {
+            color: #374151;
+        }
+
+
+        /* =========================
+           CHARTS
+        ========================= */
+
+        .two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chartbox {
+            padding: 20px;
+            min-height: 350px;
+        }
+
+        .chartbox canvas {
+            max-height: 280px;
+        }
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 10px;
+            flex-wrap: wrap;
+
+            margin-bottom: 15px;
+        }
+
+        .search {
+            border: 1px solid #d1d5db;
+
+            padding: 10px 12px;
+
+            border-radius: 8px;
+
+            min-width: 250px;
+
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: #2563eb;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+
+            font-size: 13px;
         }
 
-        th, td {
+        th,
+        td {
             text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
+
+            padding: 13px 10px;
+
+            border-bottom: 1px solid #e5e7eb;
         }
 
         th {
-            background: #f8fafc;
-        }
+            color: #6b7280;
 
-        .badge {
-            padding: 5px 10px;
-            border-radius: 20px;
             font-size: 12px;
-            font-weight: bold;
+            text-transform: uppercase;
         }
 
-        .badge-high {
-            background: #fee2e2;
-            color: #b91c1c;
+        .empty {
+            text-align: center;
+            color: #6b7280;
+
+            padding: 30px;
         }
 
-        .badge-medium {
-            background: #fef3c7;
-            color: #92400e;
+
+        /* =========================
+           LOADER
+        ========================= */
+
+        .loader {
+            display: none;
+
+            margin-top: 10px;
+
+            color: #6b7280;
+
+            font-size: 13px;
         }
 
-        .badge-low {
-            background: #dcfce7;
-            color: #166534;
+
+        /* =========================
+           TOAST MESSAGE
+        ========================= */
+
+        .toast {
+            position: fixed;
+
+            right: 25px;
+            bottom: 25px;
+
+            background: #111827;
+            color: white;
+
+            padding: 13px 17px;
+
+            border-radius: 9px;
+
+            display: none;
+
+            z-index: 100;
         }
 
-        @media(max-width: 800px) {
-            .cards {
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            text-align: center;
+
+            color: #6b7280;
+
+            font-size: 12px;
+
+            padding: 10px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width: 1000px) {
+
+            .grid4 {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .two {
+                grid-template-columns: 1fr;
+            }
         }
+
+
+        @media(max-width: 700px) {
+
+            .sidebar {
+                position: static;
+
+                width: 100%;
+                height: auto;
+            }
+
+            .side-note {
+                display: none;
+            }
+
+            .app {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+
+                width: 100%;
+
+                padding: 15px;
+            }
+
+            .grid4 {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .search {
+                width: 100%;
+            }
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-<header>
-    <h1>🛡️ SIF Precursor Detection</h1>
-    <p>AI-Based Safety Report Analysis System</p>
-</header>
 
-<div class="container">
-
-    <!-- DASHBOARD CARDS -->
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>Total Reports</h3>
-            <div class="number" id="total">0</div>
-        </div>
-
-        <div class="card">
-            <h3>High Risk</h3>
-            <div class="number red" id="high">0</div>
-        </div>
-
-        <div class="card">
-            <h3>Medium Risk</h3>
-            <div class="number orange" id="medium">0</div>
-        </div>
-
-        <div class="card">
-            <h3>Low Risk</h3>
-            <div class="number green" id="low">0</div>
-        </div>
-
-    </div>
+<div class="app">
 
 
-    <!-- ANALYZER -->
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
 
-    <div class="box">
+    <aside class="sidebar">
 
-        <h2>Analyze Safety Report</h2>
+        <div class="brand">
 
-        <textarea
-            id="report"
-            placeholder="Enter safety incident report here..."
-        ></textarea>
+            <div class="logo">
+                S
+            </div>
 
-        <button onclick="analyze()">
-            🤖 Analyze Report
-        </button>
+            <div>
 
-        <div id="result">
+                <h2>SIF Sentinel</h2>
 
-            <div class="result-card">
-
-                <h2>Analysis Result</h2>
-
-                <p>
-                    <b>Risk Level:</b>
-                    <span id="risk"></span>
-                </p>
-
-                <p>
-                    <b>Primary Precursor:</b>
-                    <span id="precursor"></span>
-                </p>
-
-                <p>
-                    <b>Detected Precursors:</b>
-                </p>
-
-                <div id="detected"></div>
-
-                <div class="recommendation">
-
-                    <b>💡 Safety Recommendation</b>
-
-                    <p id="recommendation"></p>
-
-                </div>
+                <small>
+                    Safety Intelligence
+                </small>
 
             </div>
 
         </div>
 
-    </div>
+
+        <nav class="nav">
+
+            <a href="#overview" class="active">
+                ◉ Dashboard
+            </a>
+
+            <a href="#analyzer">
+                ✦ Report Analyzer
+            </a>
+
+            <a href="#analytics">
+                ▦ Risk Analytics
+            </a>
+
+            <a href="#reports">
+                ☷ Reports
+            </a>
+
+        </nav>
 
 
-    <!-- REPORT TABLE -->
+        <div class="side-note">
 
-    <div class="box">
+            <b>AI-assisted prototype</b>
 
-        <h2>Recent Safety Reports</h2>
+            <br>
+            <br>
 
-        <table>
+            Use results as decision support and verify findings with qualified safety personnel.
 
-            <thead>
+        </div>
 
-                <tr>
-                    <th>ID</th>
-                    <th>Report</th>
-                    <th>Risk</th>
-                    <th>Precursor</th>
-                </tr>
+    </aside>
 
-            </thead>
 
-            <tbody id="reports">
-            </tbody>
 
-        </table>
+    <!-- =========================
+         MAIN
+    ========================== -->
 
-    </div>
+    <main class="main">
+
+
+        <!-- HEADER -->
+
+        <header class="topbar" id="overview">
+
+            <div>
+
+                <h1>
+                    SIF Precursor Detection Dashboard
+                </h1>
+
+                <p>
+                    Monitor safety reports, risk levels and recurring precursors.
+                </p>
+
+            </div>
+
+
+            <div class="status">
+
+                ● System Online
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================
+             STATISTICS
+        ========================== -->
+
+        <section class="grid4">
+
+
+            <div class="card stat total">
+
+                <div class="label">
+                    Total Reports
+                </div>
+
+                <div class="value" id="total">
+                    —
+                </div>
+
+                <div class="hint">
+                    All analyzed reports
+                </div>
+
+            </div>
+
+
+
+            <div class="card stat high">
+
+                <div class="label">
+                    High Risk
+                </div>
+
+                <div class="value" id="high">
+                    —
+                </div>
+
+                <div class="hint">
+                    Requires priority review
+                </div>
+
+            </div>
+
+
+
+            <div class="card stat medium">
+
+                <div class="label">
+                    Medium Risk
+                </div>
+
+                <div class="value" id="medium">
+                    —
+                </div>
+
+                <div class="hint">
+                    Needs attention
+                </div>
+
+            </div>
+
+
+
+            <div class="card stat low">
+
+                <div class="label">
+                    Low Risk
+                </div>
+
+                <div class="value" id="low">
+                    —
+                </div>
+
+                <div class="hint">
+                    Lower detected risk
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             REPORT ANALYZER
+        ========================== -->
+
+        <section class="card section" id="analyzer">
+
+            <h2>
+                Safety Report Analyzer
+            </h2>
+
+            <p class="sub">
+                Enter an unstructured safety observation to classify potential SIF precursors.
+            </p>
+
+
+            <textarea
+                id="reportText"
+                placeholder="Example: Worker was using an unsecured ladder near an energized electrical panel..."
+            ></textarea>
+
+
+            <div class="actions">
+
+                <button
+                    class="btn primary"
+                    onclick="analyze()"
+                >
+                    Analyze Report
+                </button>
+
+
+                <button
+                    class="btn ghost"
+                    onclick="clearReport()"
+                >
+                    Clear
+                </button>
+
+
+                <button
+                    class="btn secondary"
+                    onclick="fillDemo()"
+                >
+                    Load Demo Report
+                </button>
+
+            </div>
+
+
+            <div
+                class="loader"
+                id="loader"
+            >
+                Analyzing report...
+            </div>
+
+
+
+            <!-- RESULT -->
+
+            <div
+                class="result"
+                id="result"
+            >
+
+                <div class="result-top">
+
+                    <span
+                        id="riskBadge"
+                        class="badge"
+                    >
+                        RISK
+                    </span>
+
+
+                    <b id="primaryPrecursor">
+                        —
+                    </b>
+
+                </div>
+
+
+                <h3>
+                    Detected Precursors
+                </h3>
+
+
+                <div id="precursors">
+                    —
+                </div>
+
+
+                <h3>
+                    Recommended Action
+                </h3>
+
+
+                <p id="recommendation">
+                    —
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             CHARTS
+        ========================== -->
+
+        <section
+            class="two"
+            id="analytics"
+        >
+
+
+            <!-- RISK CHART -->
+
+            <div class="card chartbox">
+
+                <h2>
+                    Risk Distribution
+                </h2>
+
+                <p class="sub">
+                    Reports grouped by detected risk level.
+                </p>
+
+
+                <canvas id="riskChart"></canvas>
+
+            </div>
+
+
+
+            <!-- PRECURSOR CHART -->
+
+            <div class="card chartbox">
+
+                <h2>
+                    Precursor Distribution
+                </h2>
+
+                <p class="sub">
+                    Most frequently identified primary precursors.
+                </p>
+
+
+                <canvas id="precursorChart"></canvas>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             REPORT TABLE
+        ========================== -->
+
+        <section
+            class="card section"
+            id="reports"
+        >
+
+
+            <div class="toolbar">
+
+
+                <div>
+
+                    <h2>
+                        Recent & Historical Reports
+                    </h2>
+
+                    <p
+                        class="sub"
+                        style="margin:4px 0 0"
+                    >
+                        Search, review and export analyzed reports.
+                    </p>
+
+                </div>
+
+
+
+                <div class="actions" style="margin:0">
+
+
+                    <input
+                        class="search"
+                        id="search"
+                        oninput="renderTable()"
+                        placeholder="Search reports..."
+                    >
+
+
+                    <button
+                        class="btn secondary"
+                        onclick="exportCSV()"
+                    >
+                        Export CSV
+                    </button>
+
+
+                    <button
+                        class="btn ghost"
+                        onclick="loadDashboard()"
+                    >
+                        Refresh
+                    </button>
+
+
+                </div>
+
+            </div>
+
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                Report
+                            </th>
+
+                            <th>
+                                Risk
+                            </th>
+
+                            <th>
+                                Primary Precursor
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="reportTable">
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                class="empty"
+                            >
+                                Loading...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+            SIF Sentinel • FastAPI + SQLite • AI-assisted safety analytics prototype
+
+        </div>
+
+
+    </main>
 
 </div>
 
 
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+</div>
+
+
+
 <script>
 
-async function loadStats() {
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+
+let allReports = [];
+
+let riskChart = null;
+
+let precursorChart = null;
+
+
+
+/* =========================
+   TOAST
+========================= */
+
+function toast(message) {
+
+    const t = document.getElementById("toast");
+
+    t.textContent = message;
+
+    t.style.display = "block";
+
+    setTimeout(function () {
+
+        t.style.display = "none";
+
+    }, 2500);
+
+}
+
+
+
+/* =========================
+   HTML ESCAPE
+========================= */
+
+function esc(value) {
+
+    return String(value ?? "")
+        .replace(/[&<>"']/g, function (char) {
+
+            return {
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            }[char];
+
+        });
+
+}
+
+
+
+/* =========================
+   RISK BADGE
+========================= */
+
+function riskBadge(risk) {
+
+    return `
+        <span class="badge ${esc(risk)}">
+            ${esc(risk)}
+        </span>
+    `;
+
+}
+
+
+
+/* =========================
+   GET JSON
+========================= */
+
+async function getJSON(url) {
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+
+        throw new Error(
+            await response.text()
+        );
+
+    }
+
+    return response.json();
+
+}
+
+
+
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+async function loadDashboard() {
 
     try {
 
-        const response =
-            await fetch("/dashboard/stats");
+        const results = await Promise.all([
 
-        const data =
-            await response.json();
+            getJSON("/dashboard/stats"),
 
-        document.getElementById("total").innerText =
-            data.total_reports;
+            getJSON("/reports"),
 
-        document.getElementById("high").innerText =
-            data.high_risk;
+            getJSON("/dashboard/precursors")
 
-        document.getElementById("medium").innerText =
-            data.medium_risk;
+        ]);
 
-        document.getElementById("low").innerText =
-            data.low_risk;
 
-    } catch(error) {
+        const stats = results[0];
 
-        console.log(error);
+        const reports = results[1];
+
+        const precursors = results[2];
+
+
+        /* STATISTICS */
+
+        document.getElementById("total").textContent =
+            stats.total_reports ?? 0;
+
+
+        document.getElementById("high").textContent =
+            stats.high_risk ?? 0;
+
+
+        document.getElementById("medium").textContent =
+            stats.medium_risk ?? 0;
+
+
+        document.getElementById("low").textContent =
+            stats.low_risk ?? 0;
+
+
+
+        /* REPORTS */
+
+        allReports =
+            Array.isArray(reports)
+                ? reports
+                : [];
+
+
+        renderTable();
+
+
+        /* CHARTS */
+
+        drawCharts(
+            stats,
+            precursors
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        toast(
+            "Could not load dashboard data"
+        );
 
     }
 
 }
 
 
-async function analyze() {
 
-    const text =
-        document.getElementById("report").value.trim();
+/* =========================
+   DRAW CHARTS
+========================= */
 
-    if (!text) {
+function drawCharts(
+    stats,
+    precursors
+) {
 
-        alert("Please enter a safety report.");
+
+    /* RISK CHART */
+
+    if (riskChart) {
+
+        riskChart.destroy();
+
+    }
+
+
+    riskChart = new Chart(
+
+        document.getElementById("riskChart"),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+
+                    "High Risk",
+
+                    "Medium Risk",
+
+                    "Low Risk"
+
+                ],
+
+                datasets: [
+
+                    {
+
+                        data: [
+
+                            stats.high_risk || 0,
+
+                            stats.medium_risk || 0,
+
+                            stats.low_risk || 0
+
+                        ]
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom"
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+
+    /* PRECURSOR CHART */
+
+    if (precursorChart) {
+
+        precursorChart.destroy();
+
+    }
+
+
+    const entries =
+        Object.entries(
+            precursors || {}
+        )
+        .sort(
+            (a, b) => b[1] - a[1]
+        );
+
+
+    precursorChart = new Chart(
+
+        document.getElementById(
+            "precursorChart"
+        ),
+
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    entries.map(
+                        item => item[0]
+                    ),
+
+                datasets: [
+
+                    {
+
+                        label: "Reports",
+
+                        data:
+                            entries.map(
+                                item => item[1]
+                            )
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                indexAxis:
+                    entries.length > 5
+                        ? "y"
+                        : "x",
+
+                responsive: true,
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            precision: 0
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+}
+
+
+
+/* =========================
+   RENDER REPORT TABLE
+========================= */
+
+function renderTable() {
+
+
+    const search =
+        document
+            .getElementById("search")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const rows =
+        allReports
+            .filter(function (report) {
+
+                return `
+
+                    ${report.id}
+
+                    ${report.report_text}
+
+                    ${report.risk_level}
+
+                    ${report.primary_precursor}
+
+                `
+                .toLowerCase()
+                .includes(search);
+
+            })
+            .slice(0, 100);
+
+
+
+    const tbody =
+        document.getElementById(
+            "reportTable"
+        );
+
+
+
+    if (!rows.length) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="empty"
+                >
+                    No reports found.
+                </td>
+
+            </tr>
+
+        `;
 
         return;
 
     }
 
 
+
+    tbody.innerHTML =
+        rows.map(function (report) {
+
+            return `
+
+                <tr>
+
+                    <td>
+                        #${esc(report.id)}
+                    </td>
+
+
+                    <td>
+                        ${esc(report.report_text)}
+                    </td>
+
+
+                    <td>
+                        ${riskBadge(
+                            report.risk_level
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${esc(
+                            report.primary_precursor
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${
+                            report.created_at
+                                ? new Date(
+                                    report.created_at
+                                ).toLocaleString()
+                                : "—"
+                        }
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+
+/* =========================
+   ANALYZE REPORT
+========================= */
+
+async function analyze() {
+
+
+    const text =
+        document
+            .getElementById("reportText")
+            .value
+            .trim();
+
+
+
+    if (!text) {
+
+        toast(
+            "Please enter a safety report"
+        );
+
+        return;
+
+    }
+
+
+
+    document.getElementById(
+        "loader"
+    ).style.display = "block";
+
+
+
     try {
 
+
         const response =
-            await fetch("/analyze", {
+            await fetch(
 
-                method: "POST",
+                "/analyze",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                {
 
-                body: JSON.stringify({
-                    report_text: text
-                })
+                    method: "POST",
 
-            });
+                    headers: {
 
+                        "Content-Type":
+                            "application/json"
 
-        const data =
-            await response.json();
+                    },
+
+                    body: JSON.stringify({
+
+                        report_text: text
+
+                    })
+
+                }
+
+            );
+
 
 
         if (!response.ok) {
 
-            alert(data.detail || "Analysis failed");
-
-            return;
-
-        }
-
-
-        document.getElementById("result").style.display =
-            "block";
-
-
-        document.getElementById("risk").innerText =
-            data.risk_level;
-
-
-        document.getElementById("precursor").innerText =
-            data.primary_precursor;
-
-
-        document.getElementById("recommendation").innerText =
-            data.recommendation;
-
-
-        const detected =
-            document.getElementById("detected");
-
-        detected.innerHTML = "";
-
-
-        if (data.detected_precursors.length === 0) {
-
-            detected.innerHTML =
-                "<p>No significant precursor detected.</p>";
-
-        } else {
-
-            data.detected_precursors.forEach(item => {
-
-                const p =
-                    document.createElement("p");
-
-                p.innerHTML =
-                    `<b>${item.precursor}</b>
-                     — ${item.keywords.join(", ")}`;
-
-                detected.appendChild(p);
-
-            });
+            throw new Error(
+                await response.text()
+            );
 
         }
 
 
-        document.getElementById("report").value = "";
-
-        loadStats();
-        loadReports();
-
-    } catch(error) {
-
-        alert("Server error: " + error);
-
-    }
-
-}
-
-
-async function loadReports() {
-
-    try {
-
-        const response =
-            await fetch("/dashboard/recent-reports");
 
         const data =
             await response.json();
 
 
-        const table =
-            document.getElementById("reports");
 
-        table.innerHTML = "";
+        /* RISK */
 
-
-        data.forEach(report => {
-
-            let badge = "badge-low";
-
-            if (report.risk_level === "HIGH") {
-                badge = "badge-high";
-            }
-
-            if (report.risk_level === "MEDIUM") {
-                badge = "badge-medium";
-            }
+        const risk =
+            data.risk_level || "UNKNOWN";
 
 
-            const row =
-                document.createElement("tr");
+        const riskBadgeElement =
+            document.getElementById(
+                "riskBadge"
+            );
 
 
-            row.innerHTML = `
-
-                <td>${report.id}</td>
-
-                <td>${report.report_text}</td>
-
-                <td>
-                    <span class="badge ${badge}">
-                        ${report.risk_level}
-                    </span>
-                </td>
-
-                <td>${report.primary_precursor}</td>
-
-            `;
+        riskBadgeElement.textContent =
+            risk;
 
 
-            table.appendChild(row);
+        riskBadgeElement.className =
+            "badge " + risk;
 
-        });
 
-    } catch(error) {
 
-        console.log(error);
+        /* PRIMARY PRECURSOR */
+
+        document.getElementById(
+            "primaryPrecursor"
+        ).textContent =
+            data.primary_precursor || "—";
+
+
+
+        /* DETECTED PRECURSORS */
+
+        const precursors =
+            data.detected_precursors || [];
+
+
+        if (precursors.length) {
+
+
+            document.getElementById(
+                "precursors"
+            ).innerHTML =
+
+                precursors.map(
+                    function (item) {
+
+                        return `
+
+                            <div
+                                style="
+                                    margin:8px 0;
+                                "
+                            >
+
+                                <b>
+                                    ${esc(
+                                        item.precursor
+                                    )}
+                                </b>
+
+                                —
+
+                                ${esc(
+                                    (
+                                        item.keywords || []
+                                    ).join(", ")
+                                )}
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join("");
+
+        }
+
+        else {
+
+            document.getElementById(
+                "precursors"
+            ).innerHTML =
+                "No keyword precursor detected.";
+
+        }
+
+
+
+        /* RECOMMENDATION */
+
+        document.getElementById(
+            "recommendation"
+        ).textContent =
+            data.recommendation ||
+            "Review the report and apply appropriate controls.";
+
+
+
+        /* SHOW RESULT */
+
+        document.getElementById(
+            "result"
+        ).style.display = "block";
+
+
+
+        toast(
+            "Report analyzed successfully"
+        );
+
+
+
+        /* REFRESH DASHBOARD */
+
+        await loadDashboard();
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        toast(
+            "Analysis failed — check the API"
+        );
+
+    }
+
+    finally {
+
+        document.getElementById(
+            "loader"
+        ).style.display = "none";
 
     }
 
 }
 
 
-loadStats();
-loadReports();
+
+/* =========================
+   CLEAR REPORT
+========================= */
+
+function clearReport() {
+
+    document.getElementById(
+        "reportText"
+    ).value = "";
+
+
+    document.getElementById(
+        "result"
+    ).style.display = "none";
+
+}
+
+
+
+/* =========================
+   DEMO REPORT
+========================= */
+
+function fillDemo() {
+
+    document.getElementById(
+        "reportText"
+    ).value =
+
+        "Worker was using an unsecured ladder at height near an energized electrical panel.";
+
+}
+
+
+
+/* =========================
+   EXPORT CSV
+========================= */
+
+function exportCSV() {
+
+
+    if (!allReports.length) {
+
+        toast(
+            "No reports to export"
+        );
+
+        return;
+
+    }
+
+
+
+    const header = [
+
+        "ID",
+
+        "Report",
+
+        "Risk",
+
+        "Primary Precursor",
+
+        "Created At"
+
+    ];
+
+
+
+    const lines = [
+
+        header,
+
+        ...allReports.map(
+            function (report) {
+
+                return [
+
+                    report.id,
+
+                    report.report_text,
+
+                    report.risk_level,
+
+                    report.primary_precursor,
+
+                    report.created_at || ""
+
+                ];
+
+            }
+        )
+
+    ];
+
+
+
+    const csv =
+
+        lines
+            .map(function (row) {
+
+                return row
+                    .map(function (value) {
+
+                        return `"${String(value ?? "")
+                            .replaceAll('"', '""')}"`;
+
+                    })
+                    .join(",");
+
+            })
+            .join("\n");
+
+
+
+    const blob =
+        new Blob(
+
+            [csv],
+
+            {
+                type:
+                    "text/csv;charset=utf-8"
+            }
+
+        );
+
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href =
+        URL.createObjectURL(blob);
+
+
+    link.download =
+        "sif-reports.csv";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(
+        link.href
+    );
+
+}
+
+
+
+/* =========================
+   START DASHBOARD
+========================= */
+
+loadDashboard();
 
 </script>
 
+
 </body>
+
 </html>
