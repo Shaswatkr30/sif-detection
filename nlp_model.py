@@ -3,7 +3,7 @@ from transformers import pipeline
 
 classifier = pipeline(
     "zero-shot-classification",
-    model="facebook/bart-large-mnli"
+    model="MoritzLaurer/MiniLM-L6-mnli"
 )
 
 
