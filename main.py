@@ -403,50 +403,104 @@ def analyze_report(
         primary_precursor
     )
 
-
-    # ======================================
+# ======================================
     # 9. SAVE TO DATABASE
     # ======================================
 
     new_report = models.Report(
-
         report_text=original_text,
-
         risk_level=risk_level,
-
         primary_precursor=primary_precursor,
-
         confidence="N/A"
     )
 
     db.add(new_report)
-
     db.commit()
-
     db.refresh(new_report)
 
+    # ======================================
+    # MANAGER ALERT FOR HIGH RISK
+    # ======================================
+
+    if risk_level == "HIGH":
+
+        alert = models.ManagerAlert(
+            report_id=new_report.id,
+            risk_level="HIGH",
+            message=(
+                f"High risk safety report #{new_report.id} "
+                "requires manager review."
+            ),
+            is_read=False
+        )
+
+        db.add(alert)
+        db.commit()
 
     # ======================================
     # 10. RESPONSE
     # ======================================
 
     return {
-
         "status": "success",
-
         "report_id": new_report.id,
-
         "original_text": original_text,
-
         "processed_text": processed_text,
-
         "risk_level": risk_level,
-
         "primary_precursor": primary_precursor,
-
         "detected_precursors": detected_precursors,
-
         "recommendation": recommendation,
-
         "ai_result": ai_result
+    }
+    
+    # ======================================
+# MANAGER ALERTS
+# ======================================
+
+@app.get("/manager/alerts")
+def manager_alerts(
+    db: Session = Depends(get_db)
+):
+    alerts = (
+        db.query(models.ManagerAlert)
+        .filter(
+            models.ManagerAlert.is_read.is_(False)
+        )
+        .order_by(
+            models.ManagerAlert.id.desc()
+        )
+        .all()
+    )
+
+    return alerts
+
+# ======================================
+# MARK ALERT AS READ
+# ======================================
+
+@app.patch("/manager/alerts/{alert_id}/read")
+def mark_alert_read(
+    alert_id: int,
+    db: Session = Depends(get_db)
+):
+    alert = (
+        db.query(models.ManagerAlert)
+        .filter(
+            models.ManagerAlert.id == alert_id
+        )
+        .first()
+    )
+
+    if not alert:
+        raise HTTPException(
+            status_code=404,
+            detail="Alert not found"
+        )
+
+    alert.is_read = True
+
+    db.commit()
+
+    return {
+        "message": "Alert marked as read"
     }
