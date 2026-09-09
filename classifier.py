@@ -1,4 +1,142 @@
 # ==========================================
+# SIF PRECURSOR CATEGORIES
+# ==========================================
+
+SIF_CATEGORIES = {
+
+    "Hydrocarbon / Gas Leak": [
+        "oil leak",
+        "oil leakage",
+        "gas leak",
+        "gas leakage",
+        "hydrocarbon leak",
+        "oil spill",
+        "gas release",
+        "hydrocarbon release"
+    ],
+
+    "Fire / Explosion": [
+        "fire",
+        "explosion",
+        "flame",
+        "spark",
+        "ignition",
+        "flammable"
+    ],
+
+    "Pressure / Process Safety": [
+        "high pressure",
+        "overpressure",
+        "pressurized line",
+        "pressure leak",
+        "pressure release"
+    ],
+
+    "Electrical Hazard": [
+        "live wire",
+        "energized equipment",
+        "electrical shock",
+        "electrical hazard",
+        "electric shock"
+    ],
+
+    "H2S / Toxic Gas": [
+        "h2s",
+        "toxic gas",
+        "gas exposure",
+        "h2s exposure",
+        "alarm failure"
+    ],
+
+    "Confined Space": [
+        "confined space",
+        "low oxygen",
+        "oxygen deficiency"
+    ],
+
+    "Isolation / LOTO": [
+        "loto",
+        "lockout",
+        "lockout tagout",
+        "failed isolation",
+        "isolation failure",
+        "energized"
+    ],
+
+    "Dropped Object": [
+        "dropped object",
+        "falling object",
+        "object fell"
+    ],
+
+    "Working at Height": [
+        "fall from height",
+        "working at height",
+        "height",
+        "scaffold",
+        "ladder"
+    ],
+
+    "Crane / Lifting": [
+        "crane",
+        "crane overload",
+        "lifting",
+        "suspended load"
+    ],
+
+    "Vehicle / Pedestrian": [
+        "vehicle",
+        "forklift",
+        "pedestrian",
+        "unsafe reversing",
+        "vehicle reversing"
+    ],
+
+    "Equipment Failure": [
+        "pump vibration",
+        "pump leak",
+        "compressor vibration",
+        "equipment malfunction",
+        "equipment failure",
+        "equipment damaged"
+    ],
+
+    "Chemical Hazard": [
+        "chemical spill",
+        "chemical leak",
+        "chemical exposure"
+    ],
+
+    "Hot Work": [
+        "hot work",
+        "welding",
+        "grinding"
+    ],
+
+    "Structural / Containment Failure": [
+        "tank rupture",
+        "pipeline rupture",
+        "pipe rupture",
+        "containment failure",
+        "esd failure"
+    ],
+
+    "Corrosion": [
+        "corrosion",
+        "corroded pipe",
+        "severe corrosion",
+        "corroded vessel"
+    ],
+
+    "PPE / Procedure": [
+        "ppe missing",
+        "no ppe",
+        "ppe not worn",
+        "procedure not followed",
+        "unsafe procedure"
+    ]
+}
+# ==========================================
 # KEYWORD DETECTION
 # ==========================================
 
