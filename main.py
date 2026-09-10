@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -7,55 +8,41 @@ from database import engine, get_db
 from schemas import ReportCreate
 
 from nlp_model import analyze_text
-
-from classifier import (
-    detect_keywords,
-    calculate_risk
-)
-
+from classifier import detect_keywords, calculate_risk
 from recommendation import get_recommendation
-
 from text_preprocessor import normalize_text
 
 from fastapi.staticfiles import StaticFiles
-
-# Create database tables
-models.Base.metadata.create_all(
-    bind=engine
-)
+from fastapi.responses import FileResponse
+from pathlib import Path
 
 
-app = FastAPI(
-    title="SIF Precursor Detection API",
-    description="AI based safety report analysis system",
-    version="1.0"
-)
+# =========================
+# APP SETUP
+# =========================
+
+BASE_DIR = Path(__file__).resolve().parent
+
+models.Base.metadata.create_all(bind=engine)
+
+app = FastAPI()
 
 
-# --------------------------------
-# HOME
-# --------------------------------
+# =========================
+# FRONTEND
+# =========================
 
 @app.get("/")
-def home():
+def serve_frontend():
+    return FileResponse(BASE_DIR / "frontend" / "index.html")
 
-    return {
-        "message": "SIF Precursor Detection API is running"
-    }
-
-
-# --------------------------------
+# =========================
 # HEALTH
-# --------------------------------
+# =========================
 
 @app.get("/health")
 def health():
-
-    return {
-        "status": "healthy"
-    }
-
-
+    return {"status": "healthy"}
 # --------------------------------
 # ANALYZE REPORT
 # --------------------------------
@@ -295,11 +282,7 @@ def precursor_stats(
 
     return result
 
-app.mount(
-    "/dashboard",
-    StaticFiles(directory="frontend", html=True),
-    name="dashboard"
-)
+
 @app.post("/analyze")
 def analyze_report(
     report: ReportCreate,

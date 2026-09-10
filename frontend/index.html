@@ -4,16 +4,15 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>OIL Safety AI - SIH 26165</title>
 
 <style>
 
-/* =========================
+/* =====================================================
    GLOBAL
-========================= */
+===================================================== */
 
 *{
     box-sizing:border-box;
@@ -27,14 +26,26 @@ body{
     color:#e8eef7;
 }
 
+button,
+input,
+textarea,
+select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
 .app{
     display:flex;
     min-height:100vh;
 }
 
-/* =========================
+
+/* =====================================================
    SIDEBAR
-========================= */
+===================================================== */
 
 .sidebar{
     width:240px;
@@ -45,6 +56,7 @@ body{
     top:0;
     bottom:0;
     left:0;
+    z-index:10;
 }
 
 .logo{
@@ -103,9 +115,10 @@ body{
     margin-right:7px;
 }
 
-/* =========================
+
+/* =====================================================
    MAIN
-========================= */
+===================================================== */
 
 .main{
     margin-left:240px;
@@ -147,9 +160,10 @@ h1{
     font-size:12px;
 }
 
-/* =========================
+
+/* =====================================================
    HERO
-========================= */
+===================================================== */
 
 .hero{
     background:linear-gradient(135deg,#10243b,#0d1a2b);
@@ -170,9 +184,10 @@ h1{
     font-size:14px;
 }
 
-/* =========================
+
+/* =====================================================
    CARDS
-========================= */
+===================================================== */
 
 .cards{
     display:grid;
@@ -212,9 +227,10 @@ h1{
     color:#f87171;
 }
 
-/* =========================
+
+/* =====================================================
    PANELS
-========================= */
+===================================================== */
 
 .grid2{
     display:grid;
@@ -235,9 +251,10 @@ h1{
     margin-bottom:18px;
 }
 
-/* =========================
-   BARS
-========================= */
+
+/* =====================================================
+   SEVERITY BARS
+===================================================== */
 
 .bar-row{
     margin:15px 0;
@@ -275,9 +292,364 @@ h1{
     background:#22c55e;
 }
 
-/* =========================
-   TEXTAREA
-========================= */
+
+/* =====================================================
+   GRAPH SYSTEM
+===================================================== */
+
+.graph-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-bottom:18px;
+}
+
+.graph-panel{
+    background:#0c1a2b;
+    border:1px solid #1e3046;
+    border-radius:10px;
+    padding:20px;
+}
+
+.graph-panel h3{
+    font-size:15px;
+    margin-bottom:18px;
+}
+
+.chart-box{
+    height:270px;
+    position:relative;
+}
+
+.chart-bars{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-around;
+    height:225px;
+    border-left:1px solid #294058;
+    border-bottom:1px solid #294058;
+    padding:10px 8px 0;
+    gap:10px;
+}
+
+.chart-column{
+    height:100%;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    gap:7px;
+    min-width:0;
+}
+
+.chart-bar{
+    width:65%;
+    min-height:3px;
+    border-radius:6px 6px 0 0;
+    background:#3b82f6;
+    transition:height .5s ease;
+}
+
+.chart-bar:hover{
+    opacity:.75;
+}
+
+.chart-label{
+    color:#8192a8;
+    font-size:10px;
+    text-align:center;
+    max-width:80px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.chart-value{
+    font-size:11px;
+    color:#dbeafe;
+}
+
+
+/* =====================================================
+   DONUT
+===================================================== */
+
+.donut-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:30px;
+    min-height:230px;
+}
+
+.donut{
+    width:175px;
+    height:175px;
+    border-radius:50%;
+    background:
+        conic-gradient(
+            #ef4444 0deg 0deg,
+            #eab308 0deg 0deg,
+            #22c55e 0deg 360deg
+        );
+    position:relative;
+    flex-shrink:0;
+}
+
+.donut::after{
+    content:"";
+    position:absolute;
+    width:100px;
+    height:100px;
+    background:#0c1a2b;
+    border-radius:50%;
+    top:37.5px;
+    left:37.5px;
+}
+
+.donut-center{
+    position:absolute;
+    z-index:2;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.donut-center strong{
+    font-size:25px;
+}
+
+.donut-center span{
+    color:#8192a8;
+    font-size:10px;
+}
+
+.legend{
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#aebdcd;
+    font-size:12px;
+}
+
+.legend-dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+}
+
+.legend-red{
+    background:#ef4444;
+}
+
+.legend-yellow{
+    background:#eab308;
+}
+
+.legend-green{
+    background:#22c55e;
+}
+
+
+/* =====================================================
+   HORIZONTAL PRECURSOR GRAPH
+===================================================== */
+
+.precursor-chart{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.precursor-row{
+    display:grid;
+    grid-template-columns:160px 1fr 45px;
+    align-items:center;
+    gap:10px;
+}
+
+.precursor-name{
+    font-size:11px;
+    color:#aebdcd;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.precursor-track{
+    height:10px;
+    background:#18283b;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.precursor-fill{
+    height:100%;
+    background:#3b82f6;
+    border-radius:10px;
+    transition:width .5s ease;
+}
+
+.precursor-count{
+    text-align:right;
+    font-size:11px;
+    color:#e8eef7;
+}
+
+
+/* =====================================================
+   CATEGORY GRAPH
+===================================================== */
+
+.category-chart{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-around;
+    height:240px;
+    border-left:1px solid #294058;
+    border-bottom:1px solid #294058;
+    gap:15px;
+    padding:10px 10px 0;
+}
+
+.category-column{
+    height:100%;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    gap:8px;
+}
+
+.category-bar{
+    width:55%;
+    min-height:4px;
+    background:#8b5cf6;
+    border-radius:6px 6px 0 0;
+    transition:height .5s ease;
+}
+
+.category-label{
+    font-size:10px;
+    color:#8192a8;
+    text-align:center;
+    max-width:90px;
+}
+
+.category-value{
+    font-size:11px;
+}
+
+
+/* =====================================================
+   ALERT GRAPH
+===================================================== */
+
+.alert-chart{
+    display:flex;
+    align-items:flex-end;
+    height:240px;
+    gap:15px;
+    border-left:1px solid #294058;
+    border-bottom:1px solid #294058;
+    padding:10px;
+}
+
+.alert-column{
+    flex:1;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    gap:7px;
+}
+
+.alert-bar{
+    width:55%;
+    min-height:3px;
+    background:#f97316;
+    border-radius:6px 6px 0 0;
+    transition:height .5s ease;
+}
+
+.alert-label{
+    font-size:10px;
+    color:#8192a8;
+}
+
+.alert-value{
+    font-size:11px;
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+th,
+td{
+    padding:13px 10px;
+    border-bottom:1px solid #203149;
+    text-align:left;
+}
+
+th{
+    color:#8192a8;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+tbody tr:hover{
+    background:#0f2237;
+}
+
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+input,
+select{
+    background:#081522;
+    color:white;
+    border:1px solid #294058;
+    padding:10px;
+    border-radius:6px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:#3b82f6;
+}
+
+.filters{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+
+/* =====================================================
+   ANALYZER
+===================================================== */
 
 textarea{
     width:100%;
@@ -296,10 +668,6 @@ textarea{
 textarea:focus{
     border-color:#3b82f6;
 }
-
-/* =========================
-   SAMPLE BUTTONS
-========================= */
 
 .samples{
     display:flex;
@@ -322,10 +690,6 @@ textarea:focus{
     background:#1a3550;
 }
 
-/* =========================
-   BUTTON
-========================= */
-
 .btn{
     background:#2563eb;
     color:white;
@@ -341,25 +705,15 @@ textarea:focus{
     background:#1d4ed8;
 }
 
-.btn.secondary{
-    background:#334155;
+.btn-secondary{
+    background:#13263c;
+    border:1px solid #294058;
+    color:#b9c8d8;
 }
 
-.btn.secondary:hover{
-    background:#475569;
+.btn-secondary:hover{
+    background:#1a3550;
 }
-
-.btn.success{
-    background:#15803d;
-}
-
-.btn.danger{
-    background:#b91c1c;
-}
-
-/* =========================
-   RESULT
-========================= */
 
 .result{
     margin-top:18px;
@@ -395,75 +749,19 @@ textarea:focus{
     font-size:18px;
 }
 
-/* =========================
-   TABLE
-========================= */
-
-table{
-    width:100%;
-    border-collapse:collapse;
+.ai-details{
+    background:#0d2033;
+    padding:13px;
+    border-radius:7px;
+    margin-top:15px;
+    line-height:1.6;
     font-size:13px;
 }
 
-th,
-td{
-    padding:13px 10px;
-    border-bottom:1px solid #203149;
-    text-align:left;
-}
 
-th{
-    color:#8192a8;
-    font-size:11px;
-    text-transform:uppercase;
-}
-
-input,
-select{
-    background:#081522;
-    color:white;
-    border:1px solid #294058;
-    padding:10px;
-    border-radius:6px;
-    outline:none;
-}
-
-input{
-    width:100%;
-}
-
-.filters{
-    display:flex;
-    gap:10px;
-    margin-bottom:15px;
-}
-
-.filters input{
-    flex:1;
-}
-
-.filters select{
-    width:160px;
-}
-
-.risk-high{
-    color:#f87171;
-    font-weight:700;
-}
-
-.risk-medium{
-    color:#facc15;
-    font-weight:700;
-}
-
-.risk-low{
-    color:#4ade80;
-    font-weight:700;
-}
-
-/* =========================
+/* =====================================================
    ACTIONS
-========================= */
+===================================================== */
 
 .action{
     padding:16px;
@@ -486,59 +784,96 @@ input{
     line-height:1.5;
 }
 
-/* =========================
-   ALERT
-========================= */
 
-.alert-box{
-    border:1px solid #7f1d1d;
-    background:#2a1014;
+/* =====================================================
+   ALERTS
+===================================================== */
+
+.alert{
     padding:16px;
-    border-radius:10px;
-    margin-bottom:12px;
+    border:1px solid #4b2a2a;
+    background:#1a1117;
+    border-radius:8px;
+    margin-bottom:10px;
 }
 
 .alert-top{
     display:flex;
     justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
+    gap:15px;
 }
 
-.alert-message{
-    color:#d1d5db;
-    margin-top:10px;
+.alert p{
+    color:#91a2b6;
+    font-size:13px;
+    margin-top:7px;
     line-height:1.5;
 }
 
-.alert-time{
-    color:#7f8ea3;
-    font-size:11px;
-    margin-top:8px;
+.alert button{
+    margin-top:10px;
+    background:#13263c;
+    border:1px solid #294058;
+    color:#b9c8d8;
+    padding:7px 10px;
+    border-radius:5px;
+}
+
+
+/* =====================================================
+   LOADING / EMPTY
+===================================================== */
+
+.loading{
+    color:#8192a8;
+    font-size:12px;
+    padding:20px;
+    text-align:center;
 }
 
 .empty{
+    color:#8192a8;
+    font-size:13px;
     padding:20px;
     text-align:center;
-    color:#8192a8;
-    background:#081522;
-    border-radius:8px;
 }
 
-/* =========================
-   LOADING
-========================= */
 
-.loading{
-    padding:20px;
-    text-align:center;
-    color:#8192a8;
+/* =====================================================
+   RISK COLORS
+===================================================== */
+
+.risk-high{
+    color:#f87171;
+    font-weight:700;
 }
 
-/* =========================
+.risk-medium{
+    color:#facc15;
+    font-weight:700;
+}
+
+.risk-low{
+    color:#4ade80;
+    font-weight:700;
+}
+
+
+/* =====================================================
    RESPONSIVE
-========================= */
+===================================================== */
+
+@media(max-width:1100px){
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .graph-grid{
+        grid-template-columns:1fr;
+    }
+
+}
 
 @media(max-width:900px){
 
@@ -551,9 +886,10 @@ input{
         width:calc(100% - 190px);
     }
 
-    .cards{
-        grid-template-columns:repeat(2,1fr);
+    .grid2{
+        grid-template-columns:1fr;
     }
+
 }
 
 @media(max-width:650px){
@@ -589,14 +925,18 @@ input{
         flex-direction:column;
     }
 
-    .filters select{
-        width:100%;
-    }
-
     .topbar{
         flex-direction:column;
         align-items:flex-start;
         gap:12px;
+    }
+
+    .donut-wrapper{
+        flex-direction:column;
+    }
+
+    .precursor-row{
+        grid-template-columns:100px 1fr 35px;
     }
 
 }
@@ -611,9 +951,9 @@ input{
 <div class="app">
 
 
-<!-- =========================
+<!-- =====================================================
      SIDEBAR
-========================= -->
+===================================================== -->
 
 <aside class="sidebar">
 
@@ -666,7 +1006,6 @@ input{
 
     </div>
 
-
     <div class="status">
         <span class="dot"></span>
         AI Engine Online
@@ -675,10 +1014,9 @@ input{
 </aside>
 
 
-
-<!-- =========================
+<!-- =====================================================
      MAIN
-========================= -->
+===================================================== -->
 
 <main class="main">
 
@@ -687,7 +1025,10 @@ input{
      DASHBOARD
 ===================================================== -->
 
-<section id="dashboard" class="page active">
+<section
+    id="dashboard"
+    class="page active"
+>
 
     <div class="topbar">
 
@@ -717,14 +1058,17 @@ input{
         </h2>
 
         <p>
-            Analyze unsafe-act, unsafe-condition and near-miss reports
-            using NLP-based safety intelligence.
+            Analyze unsafe-act, unsafe-condition and
+            near-miss reports using NLP-based safety
+            intelligence.
         </p>
 
     </div>
 
 
-    <!-- STAT CARDS -->
+    <!-- =================================================
+         STAT CARDS
+    ================================================= -->
 
     <div class="cards">
 
@@ -735,8 +1079,8 @@ input{
             </div>
 
             <div
-                class="card-value"
                 id="totalReports"
+                class="card-value"
             >
                 0
             </div>
@@ -751,8 +1095,8 @@ input{
             </div>
 
             <div
-                class="card-value red"
                 id="highReports"
+                class="card-value red"
             >
                 0
             </div>
@@ -767,8 +1111,8 @@ input{
             </div>
 
             <div
-                class="card-value yellow"
                 id="mediumReports"
+                class="card-value yellow"
             >
                 0
             </div>
@@ -783,8 +1127,8 @@ input{
             </div>
 
             <div
-                class="card-value green"
                 id="lowReports"
+                class="card-value green"
             >
                 0
             </div>
@@ -794,7 +1138,9 @@ input{
     </div>
 
 
-    <!-- RISK OVERVIEW -->
+    <!-- =================================================
+         INCIDENT SEVERITY + OLD TREND
+    ================================================= -->
 
     <div class="grid2">
 
@@ -888,18 +1234,140 @@ input{
         </div>
 
 
-        <!-- PRECURSOR SUMMARY -->
-
         <div class="panel">
 
             <h3>
-                Detected SIF Precursors
+                SIF Monitoring
             </h3>
 
-            <div id="precursorSummary">
+            <div
+                id="precursorSummary"
+                class="muted"
+                style="line-height:1.8"
+            >
+                Loading safety intelligence...
+            </div>
 
-                <div class="loading">
-                    Loading precursor data...
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         GRAPH 1 + GRAPH 2
+    ================================================= -->
+
+    <div class="graph-grid">
+
+
+        <!-- RISK DONUT -->
+
+        <div class="graph-panel">
+
+            <h3>
+                📊 Risk Distribution
+            </h3>
+
+            <div class="donut-wrapper">
+
+                <div
+                    class="donut"
+                    id="riskDonut"
+                >
+
+                    <div class="donut-center">
+
+                        <strong id="donutTotal">
+                            0
+                        </strong>
+
+                        <span>
+                            REPORTS
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="legend">
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot legend-red"
+                        ></span>
+
+                        <span>
+                            High
+                        </span>
+
+                        <strong id="legendHigh">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot legend-yellow"
+                        ></span>
+
+                        <span>
+                            Medium
+                        </span>
+
+                        <strong id="legendMedium">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot legend-green"
+                        ></span>
+
+                        <span>
+                            Low
+                        </span>
+
+                        <strong id="legendLow">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REPORT TREND -->
+
+        <div class="graph-panel">
+
+            <h3>
+                📈 Reports Trend — Last 7 Days
+            </h3>
+
+            <div class="chart-box">
+
+                <div
+                    id="reportsTrend"
+                    class="chart-bars"
+                >
+
+                    <div class="loading">
+                        Loading trend...
+                    </div>
+
                 </div>
 
             </div>
@@ -909,18 +1377,26 @@ input{
     </div>
 
 
-    <!-- RECENT REPORTS -->
+    <!-- =================================================
+         PRECURSOR GRAPH
+    ================================================= -->
 
-    <div class="panel">
+    <div
+        class="graph-panel"
+        style="margin-bottom:18px;"
+    >
 
         <h3>
-            Risk Register — Recent Reports
+            📊 SIF Precursor Distribution
         </h3>
 
-        <div id="recentReports">
+        <div
+            id="precursorChart"
+            class="precursor-chart"
+        >
 
             <div class="loading">
-                Loading reports...
+                Loading precursor distribution...
             </div>
 
         </div>
@@ -928,7 +1404,85 @@ input{
     </div>
 
 
-    <!-- MANAGER ALERT PREVIEW -->
+    <!-- =================================================
+         CATEGORY + ALERT GRAPH
+    ================================================= -->
+
+    <div class="graph-grid">
+
+
+        <!-- CATEGORY RISK -->
+
+        <div class="graph-panel">
+
+            <h3>
+                📊 Category-wise Risk
+            </h3>
+
+            <div
+                id="categoryChart"
+                class="category-chart"
+            >
+
+                <div class="loading">
+                    Loading category data...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ALERT TREND -->
+
+        <div class="graph-panel">
+
+            <h3>
+                🚨 Alert Trend — Last 7 Days
+            </h3>
+
+            <div
+                id="alertChart"
+                class="alert-chart"
+            >
+
+                <div class="loading">
+                    Loading alert trend...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         RECENT REPORTS
+    ================================================= -->
+
+    <div class="panel">
+
+        <h3>
+            Recent Reports
+        </h3>
+
+        <div
+            id="recentReports"
+        >
+
+            <div class="loading">
+                Loading recent reports...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         MANAGER ALERT PREVIEW
+    ================================================= -->
 
     <div class="panel">
 
@@ -936,7 +1490,9 @@ input{
             🚨 Manager Alerts
         </h3>
 
-        <div id="dashboardAlerts">
+        <div
+            id="dashboardAlerts"
+        >
 
             <div class="loading">
                 Loading alerts...
@@ -954,7 +1510,10 @@ input{
      ANALYZER
 ===================================================== -->
 
-<section id="analyzer" class="page">
+<section
+    id="analyzer"
+    class="page"
+>
 
     <div class="topbar">
 
@@ -976,14 +1535,11 @@ input{
     <div class="grid2">
 
 
-        <!-- INPUT -->
-
         <div class="panel">
 
             <h3>
                 Safety Report
             </h3>
-
 
             <textarea
                 id="reportText"
@@ -1026,7 +1582,6 @@ input{
 
             <button
                 class="btn"
-                id="analyzeButton"
                 onclick="analyzeReport()"
             >
                 ANALYZE REPORT
@@ -1034,7 +1589,7 @@ input{
 
 
             <button
-                class="btn secondary"
+                class="btn btn-secondary"
                 onclick="clearReport()"
             >
                 CLEAR
@@ -1043,15 +1598,11 @@ input{
         </div>
 
 
-
-        <!-- RESULT -->
-
         <div class="panel">
 
             <h3>
                 AI Assessment
             </h3>
-
 
             <div
                 id="emptyResult"
@@ -1086,6 +1637,19 @@ input{
                     <div class="result-box">
 
                         <small>
+                            SIF Score
+                        </small>
+
+                        <strong id="score">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-box">
+
+                        <small>
                             Risk Level
                         </small>
 
@@ -1099,10 +1663,23 @@ input{
                     <div class="result-box">
 
                         <small>
-                            Primary Precursor
+                            Category
                         </small>
 
                         <strong id="category">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-box">
+
+                        <small>
+                            Precursor
+                        </small>
+
+                        <strong id="precursor">
                             --
                         </strong>
 
@@ -1112,24 +1689,12 @@ input{
 
 
                 <p class="muted">
-                    Detected precursors
-                </p>
-
-                <p
-                    id="precursor"
-                    style="margin:7px 0 15px"
-                >
-                    --
-                </p>
-
-
-                <p class="muted">
-                    Recommended control
+                    Recommended Control
                 </p>
 
                 <p
                     id="control"
-                    style="margin-top:7px"
+                    style="margin-top:7px;line-height:1.6"
                 >
                     --
                 </p>
@@ -1137,12 +1702,9 @@ input{
 
                 <div
                     id="aiDetails"
-                    style="
-                        margin-top:15px;
-                        padding-top:15px;
-                        border-top:1px solid #203149;
-                    "
-                ></div>
+                    class="ai-details"
+                >
+                </div>
 
             </div>
 
@@ -1158,7 +1720,10 @@ input{
      RISK REGISTER
 ===================================================== -->
 
-<section id="risk" class="page">
+<section
+    id="risk"
+    class="page"
+>
 
     <div class="topbar">
 
@@ -1234,7 +1799,10 @@ input{
      CORRECTIVE ACTIONS
 ===================================================== -->
 
-<section id="actions" class="page">
+<section
+    id="actions"
+    class="page"
+>
 
     <div class="topbar">
 
@@ -1245,7 +1813,7 @@ input{
             </h1>
 
             <p class="muted">
-                Recommended actions from AI analysis
+                Recommended actions for safety findings
             </p>
 
         </div>
@@ -1269,7 +1837,10 @@ input{
      INSIGHTS
 ===================================================== -->
 
-<section id="insights" class="page">
+<section
+    id="insights"
+    class="page"
+>
 
     <div class="topbar">
 
@@ -1298,8 +1869,8 @@ input{
             </div>
 
             <div
-                class="card-value"
                 id="topPrecursor"
+                class="card-value"
                 style="font-size:20px"
             >
                 --
@@ -1315,9 +1886,8 @@ input{
             </div>
 
             <div
-                class="card-value"
                 id="insightTotal"
-                style="font-size:20px"
+                class="card-value"
             >
                 0
             </div>
@@ -1332,9 +1902,8 @@ input{
             </div>
 
             <div
-                class="card-value red"
                 id="insightHigh"
-                style="font-size:20px"
+                class="card-value red"
             >
                 0
             </div>
@@ -1345,13 +1914,12 @@ input{
         <div class="card">
 
             <div class="card-title">
-                Unread Alerts
+                Alerts
             </div>
 
             <div
-                class="card-value red"
                 id="insightAlerts"
-                style="font-size:20px"
+                class="card-value red"
             >
                 0
             </div>
@@ -1368,14 +1936,35 @@ input{
         </h3>
 
         <p
+            id="insightText"
             class="muted"
             style="line-height:1.8"
         >
-            The system analyzes incoming safety reports using
-            NLP-based processing and identifies potential Serious
-            Injury & Fatality precursors. High-risk reports are
-            automatically stored and sent to the Manager Alert system
-            for review.
+            Loading insights...
+        </p>
+
+    </div>
+
+
+    <div class="panel">
+
+        <h3>
+            How this system works
+        </h3>
+
+        <p
+            class="muted"
+            style="line-height:1.8"
+        >
+
+            Safety Report → FastAPI Backend →
+            NLP / BERT / RoBERTa Model →
+            SIF Score →
+            Risk Classification →
+            Precursor Detection →
+            Recommended Controls →
+            Safety Dashboard
+
         </p>
 
     </div>
@@ -1388,18 +1977,21 @@ input{
      MANAGER ALERTS
 ===================================================== -->
 
-<section id="alerts" class="page">
+<section
+    id="alerts"
+    class="page"
+>
 
     <div class="topbar">
 
         <div>
 
             <h1>
-                🚨 Manager Alerts
+                Manager Alerts
             </h1>
 
             <p class="muted">
-                High-risk safety reports requiring manager review
+                High-priority safety alerts requiring attention
             </p>
 
         </div>
@@ -1407,14 +1999,10 @@ input{
     </div>
 
 
-    <div class="panel">
+    <div id="alertList">
 
-        <div id="alertList">
-
-            <div class="loading">
-                Loading manager alerts...
-            </div>
-
+        <div class="loading">
+            Loading manager alerts...
         </div>
 
     </div>
@@ -1428,29 +2016,170 @@ input{
 
 
 
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
-
 <script>
+
+/* =====================================================
+   API
+===================================================== */
+
+const API_BASE = "";
+
+
+/* =====================================================
+   API HELPER
+===================================================== */
+
+async function getJSON(url){
+
+    const response =
+        await fetch(API_BASE + url);
+
+    if(!response.ok){
+
+        throw new Error(
+            "API Error: " +
+            response.status
+        );
+
+    }
+
+    return await response.json();
+}
+
+
+async function postJSON(url,data){
+
+    const response =
+        await fetch(
+            API_BASE + url,
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:JSON.stringify(data)
+            }
+        );
+
+    if(!response.ok){
+
+        const message =
+            await response.text();
+
+        throw new Error(
+            message ||
+            "API Error: " +
+            response.status
+        );
+
+    }
+
+    return await response.json();
+}
+
+
+async function patchJSON(url){
+
+    const response =
+        await fetch(
+            API_BASE + url,
+            {
+                method:"PATCH"
+            }
+        );
+
+    if(!response.ok){
+
+        throw new Error(
+            "API Error: " +
+            response.status
+        );
+
+    }
+
+    return await response.json();
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function esc(value){
+
+    if(value === null ||
+       value === undefined){
+
+        return "";
+
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   RISK CLASS
+===================================================== */
+
+function riskClass(risk){
+
+    const value =
+        String(risk || "")
+        .toUpperCase();
+
+    if(value === "HIGH")
+        return "risk-high";
+
+    if(value === "MEDIUM")
+        return "risk-medium";
+
+    return "risk-low";
+
+}
+
+
+function riskBadge(risk){
+
+    const value =
+        String(risk || "LOW")
+        .toUpperCase();
+
+    return `
+        <span class="${riskClass(value)}">
+            ${esc(value)}
+        </span>
+    `;
+
+}
 
 
 /* =====================================================
    PAGE NAVIGATION
 ===================================================== */
 
-function showPage(pageId, button){
+function showPage(pageId,button){
 
     document
         .querySelectorAll(".page")
-        .forEach(function(page){
+        .forEach(
+            page =>
+                page.classList.remove("active")
+        );
 
-            page.classList.remove("active");
 
-        });
-
-
-    const page = document.getElementById(pageId);
+    const page =
+        document.getElementById(pageId);
 
     if(page){
 
@@ -1461,11 +2190,10 @@ function showPage(pageId, button){
 
     document
         .querySelectorAll(".nav button")
-        .forEach(function(btn){
-
-            btn.classList.remove("active");
-
-        });
+        .forEach(
+            btn =>
+                btn.classList.remove("active")
+        );
 
 
     if(button){
@@ -1474,14 +2202,6 @@ function showPage(pageId, button){
 
     }
 
-
-    /* Refresh data when pages are opened */
-
-    if(pageId === "dashboard"){
-
-        loadDashboard();
-
-    }
 
     if(pageId === "risk"){
 
@@ -1510,97 +2230,6 @@ function showPage(pageId, button){
 }
 
 
-
-/* =====================================================
-   API HELPER
-===================================================== */
-
-async function getJSON(url){
-
-    const response = await fetch(url);
-
-    if(!response.ok){
-
-        throw new Error(
-            "API Error " +
-            response.status +
-            ": " +
-            await response.text()
-        );
-
-    }
-
-    return await response.json();
-
-}
-
-
-
-/* =====================================================
-   HTML ESCAPE
-===================================================== */
-
-function esc(value){
-
-    if(value === null || value === undefined){
-
-        return "";
-
-    }
-
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-
-/* =====================================================
-   RISK CLASS
-===================================================== */
-
-function riskClass(risk){
-
-    if(risk === "HIGH"){
-
-        return "risk-high";
-
-    }
-
-    if(risk === "MEDIUM"){
-
-        return "risk-medium";
-
-    }
-
-    return "risk-low";
-
-}
-
-
-
-/* =====================================================
-   RISK BADGE
-===================================================== */
-
-function riskBadge(risk){
-
-    const cls = riskClass(risk);
-
-    return `
-        <span class="${cls}">
-            ${esc(risk)}
-        </span>
-    `;
-
-}
-
-
-
 /* =====================================================
    LOAD DASHBOARD
 ===================================================== */
@@ -1610,83 +2239,110 @@ async function loadDashboard(){
     try{
 
         const stats =
-            await getJSON("/dashboard/stats");
+            await getJSON(
+                "/dashboard/stats"
+            );
+
+
+        const total =
+            Number(
+                stats.total_reports || 0
+            );
+
+        const high =
+            Number(
+                stats.high_risk || 0
+            );
+
+        const medium =
+            Number(
+                stats.medium_risk || 0
+            );
+
+        const low =
+            Number(
+                stats.low_risk || 0
+            );
 
 
         document.getElementById(
             "totalReports"
-        ).textContent =
-            stats.total_reports || 0;
+        ).textContent = total;
 
 
         document.getElementById(
             "highReports"
-        ).textContent =
-            stats.high_risk || 0;
+        ).textContent = high;
 
 
         document.getElementById(
             "mediumReports"
-        ).textContent =
-            stats.medium_risk || 0;
+        ).textContent = medium;
 
 
         document.getElementById(
             "lowReports"
-        ).textContent =
-            stats.low_risk || 0;
+        ).textContent = low;
 
 
         document.getElementById(
             "highBarText"
-        ).textContent =
-            stats.high_risk || 0;
+        ).textContent = high;
 
 
         document.getElementById(
             "mediumBarText"
-        ).textContent =
-            stats.medium_risk || 0;
+        ).textContent = medium;
 
 
         document.getElementById(
             "lowBarText"
-        ).textContent =
-            stats.low_risk || 0;
+        ).textContent = low;
 
 
-        const total =
-            stats.total_reports || 0;
+        const max =
+            Math.max(
+                high,
+                medium,
+                low,
+                1
+            );
 
 
-        if(total > 0){
-
-            document.getElementById(
-                "highBar"
-            ).style.width =
-                ((stats.high_risk / total) * 100) + "%";
+        document.getElementById(
+            "highBar"
+        ).style.width =
+            ((high / max) * 100) + "%";
 
 
-            document.getElementById(
-                "mediumBar"
-            ).style.width =
-                ((stats.medium_risk / total) * 100) + "%";
+        document.getElementById(
+            "mediumBar"
+        ).style.width =
+            ((medium / max) * 100) + "%";
 
 
-            document.getElementById(
-                "lowBar"
-            ).style.width =
-                ((stats.low_risk / total) * 100) + "%";
+        document.getElementById(
+            "lowBar"
+        ).style.width =
+            ((low / max) * 100) + "%";
 
-        }
 
+        updateRiskDonut(stats);
+
+
+        await loadPrecursorChart();
+
+        await loadReportsTrend();
+
+        await loadCategoryChart();
+
+        await loadAlertTrend();
 
         await loadRecentReports();
 
-        await loadPrecursors();
-
         await loadManagerAlertsPreview();
 
+        await loadPrecursorSummary();
 
     }
     catch(error){
@@ -1696,129 +2352,98 @@ async function loadDashboard(){
             error
         );
 
-    }
-
-}
-
-
-
-/* =====================================================
-   RECENT REPORTS
-===================================================== */
-
-async function loadRecentReports(){
-
-    try{
-
-        const reports =
-            await getJSON("/dashboard/recent-reports");
-
-
-        const container =
-            document.getElementById(
-                "recentReports"
-            );
-
-
-        if(!reports.length){
-
-            container.innerHTML = `
-                <div class="empty">
-                    No reports found.
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        let html = `
-
-            <table>
-
-                <tr>
-
-                    <th>
-                        ID
-                    </th>
-
-                    <th>
-                        Report
-                    </th>
-
-                    <th>
-                        Precursor
-                    </th>
-
-                    <th>
-                        Risk
-                    </th>
-
-                </tr>
-
-        `;
-
-
-        reports.forEach(function(report){
-
-            html += `
-
-                <tr>
-
-                    <td>
-                        #${esc(report.id)}
-                    </td>
-
-                    <td>
-                        ${esc(report.report_text)}
-                    </td>
-
-                    <td>
-                        ${esc(report.primary_precursor)}
-                    </td>
-
-                    <td>
-                        ${riskBadge(report.risk_level)}
-                    </td>
-
-                </tr>
-
-            `;
-
-        });
-
-
-        html += "</table>";
-
-
-        container.innerHTML = html;
-
-
-    }
-    catch(error){
-
-        console.error(error);
-
         document.getElementById(
-            "recentReports"
-        ).innerHTML = `
-            <div class="empty">
-                Could not load reports.
-            </div>
-        `;
+            "precursorSummary"
+        ).textContent =
+            "Backend connection error. Please make sure FastAPI server is running.";
 
     }
 
 }
 
 
-
 /* =====================================================
-   PRECURSOR DATA
+   RISK DONUT
 ===================================================== */
 
-async function loadPrecursors(){
+function updateRiskDonut(stats){
+
+    const total =
+        Number(stats.total_reports || 0);
+
+    const high =
+        Number(stats.high_risk || 0);
+
+    const medium =
+        Number(stats.medium_risk || 0);
+
+    const low =
+        Number(stats.low_risk || 0);
+
+
+    document.getElementById(
+        "donutTotal"
+    ).textContent = total;
+
+
+    document.getElementById(
+        "legendHigh"
+    ).textContent = high;
+
+
+    document.getElementById(
+        "legendMedium"
+    ).textContent = medium;
+
+
+    document.getElementById(
+        "legendLow"
+    ).textContent = low;
+
+
+    const donut =
+        document.getElementById(
+            "riskDonut"
+        );
+
+
+    if(total === 0){
+
+        donut.style.background =
+            "#18283b";
+
+        return;
+
+    }
+
+
+    const highDeg =
+        (high / total) * 360;
+
+
+    const mediumDeg =
+        (medium / total) * 360;
+
+
+    const mediumEnd =
+        highDeg + mediumDeg;
+
+
+    donut.style.background =
+        `conic-gradient(
+            #ef4444 0deg ${highDeg}deg,
+            #eab308 ${highDeg}deg ${mediumEnd}deg,
+            #22c55e ${mediumEnd}deg 360deg
+        )`;
+
+}
+
+
+/* =====================================================
+   PRECURSOR CHART
+===================================================== */
+
+async function loadPrecursorChart(){
 
     try{
 
@@ -1830,91 +2455,849 @@ async function loadPrecursors(){
 
         const container =
             document.getElementById(
-                "precursorSummary"
+                "precursorChart"
             );
 
 
-        const entries =
-            Object.entries(data);
+        let entries =
+            Object.entries(data || {});
 
 
         if(!entries.length){
 
-            container.innerHTML = `
-                <div class="empty">
+            container.innerHTML =
+                `<div class="empty">
                     No precursor data available.
-                </div>
-            `;
+                </div>`;
 
             return;
 
         }
 
 
-        entries.sort(function(a,b){
+        entries =
+            entries
+            .map(
+                item => [
+                    item[0],
+                    Number(item[1]) || 0
+                ]
+            )
+            .sort(
+                (a,b) =>
+                    b[1] - a[1]
+            );
 
-            return b[1] - a[1];
 
-        });
+        const topEntries =
+            entries.slice(0,8);
+
+
+        const maxValue =
+            Math.max(
+                ...topEntries.map(
+                    item => item[1]
+                ),
+                1
+            );
 
 
         let html = "";
 
 
-        entries
-            .slice(0,8)
-            .forEach(function(item){
+        topEntries.forEach(
+            item => {
+
+                const name =
+                    item[0];
+
+                const count =
+                    item[1];
+
+
+                const percentage =
+                    (count / maxValue) * 100;
+
 
                 html += `
 
-                    <div
-                        style="
-                            display:flex;
-                            justify-content:space-between;
-                            padding:10px 0;
-                            border-bottom:1px solid #203149;
-                        "
-                    >
+                    <div class="precursor-row">
 
-                        <span>
-                            ${esc(item[0])}
-                        </span>
+                        <div
+                            class="precursor-name"
+                            title="${esc(name)}"
+                        >
+                            ${esc(name)}
+                        </div>
 
-                        <strong>
-                            ${esc(item[1])}
-                        </strong>
+                        <div class="precursor-track">
+
+                            <div
+                                class="precursor-fill"
+                                style="width:${percentage}%"
+                            ></div>
+
+                        </div>
+
+                        <div class="precursor-count">
+                            ${count}
+                        </div>
 
                     </div>
 
                 `;
 
-            });
+            }
+        );
 
 
         container.innerHTML = html;
 
-
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Precursor chart error:",
+            error
+        );
 
         document.getElementById(
-            "precursorSummary"
-        ).innerHTML = `
-            <div class="empty">
-                Could not load precursor data.
-            </div>
-        `;
+            "precursorChart"
+        ).innerHTML =
+            `<div class="empty">
+                Could not load precursor chart.
+            </div>`;
 
     }
 
 }
 
 
+/* =====================================================
+   REPORT TREND
+===================================================== */
+
+async function loadReportsTrend(){
+
+    try{
+
+        const reports =
+            await getJSON(
+                "/reports"
+            );
+
+
+        const container =
+            document.getElementById(
+                "reportsTrend"
+            );
+
+
+        if(!Array.isArray(reports) ||
+           reports.length === 0){
+
+            container.innerHTML =
+                `<div class="empty">
+                    No report data available.
+                </div>`;
+
+            return;
+
+        }
+
+
+        const days = [];
+
+
+        for(
+            let i = 6;
+            i >= 0;
+            i--
+        ){
+
+            const date =
+                new Date();
+
+
+            date.setDate(
+                date.getDate() - i
+            );
+
+
+            date.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            days.push(date);
+
+        }
+
+
+        const counts =
+            days.map(
+                day => {
+
+                    const nextDay =
+                        new Date(day);
+
+
+                    nextDay.setDate(
+                        nextDay.getDate() + 1
+                    );
+
+
+                    return reports.filter(
+                        report => {
+
+                            if(!report.created_at)
+                                return false;
+
+
+                            const reportDate =
+                                new Date(
+                                    report.created_at
+                                );
+
+
+                            return (
+                                reportDate >= day &&
+                                reportDate < nextDay
+                            );
+
+                        }
+                    ).length;
+
+                }
+            );
+
+
+        const maxCount =
+            Math.max(
+                ...counts,
+                1
+            );
+
+
+        let html = "";
+
+
+        days.forEach(
+            (day,index) => {
+
+                const count =
+                    counts[index];
+
+
+                const height =
+                    count > 0
+                    ? Math.max(
+                        8,
+                        (count / maxCount) * 100
+                    )
+                    : 3;
+
+
+                const label =
+                    day.toLocaleDateString(
+                        undefined,
+                        {
+                            weekday:"short"
+                        }
+                    );
+
+
+                html += `
+
+                    <div class="chart-column">
+
+                        <div class="chart-value">
+                            ${count}
+                        </div>
+
+                        <div
+                            class="chart-bar"
+                            style="height:${height}%"
+                            title="${count} reports"
+                        ></div>
+
+                        <div class="chart-label">
+                            ${label}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        container.innerHTML = html;
+
+    }
+    catch(error){
+
+        console.error(
+            "Trend error:",
+            error
+        );
+
+    }
+
+}
+
 
 /* =====================================================
-   LOAD SAMPLE
+   CATEGORY-WISE RISK
+===================================================== */
+
+async function loadCategoryChart(){
+
+    try{
+
+        const reports =
+            await getJSON(
+                "/reports"
+            );
+
+
+        const container =
+            document.getElementById(
+                "categoryChart"
+            );
+
+
+        const categoryCounts = {};
+
+
+        reports.forEach(
+            report => {
+
+                const category =
+                    report.category ||
+                    report.report_type ||
+                    report.type ||
+                    "Unknown";
+
+
+                categoryCounts[category] =
+                    (categoryCounts[category] || 0) + 1;
+
+            }
+        );
+
+
+        const entries =
+            Object.entries(
+                categoryCounts
+            );
+
+
+        if(!entries.length){
+
+            container.innerHTML =
+                `<div class="empty">
+                    No category data available.
+                </div>`;
+
+            return;
+
+        }
+
+
+        const max =
+            Math.max(
+                ...entries.map(
+                    item => item[1]
+                ),
+                1
+            );
+
+
+        let html = "";
+
+
+        entries.forEach(
+            item => {
+
+                const name =
+                    item[0];
+
+                const count =
+                    Number(item[1]);
+
+
+                const height =
+                    Math.max(
+                        8,
+                        (count / max) * 100
+                    );
+
+
+                html += `
+
+                    <div class="category-column">
+
+                        <div class="category-value">
+                            ${count}
+                        </div>
+
+                        <div
+                            class="category-bar"
+                            style="height:${height}%"
+                            title="${count} reports"
+                        ></div>
+
+                        <div class="category-label">
+                            ${esc(name)}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        container.innerHTML = html;
+
+    }
+    catch(error){
+
+        console.error(
+            "Category chart error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ALERT TREND
+===================================================== */
+
+async function loadAlertTrend(){
+
+    try{
+
+        const alerts =
+            await getJSON(
+                "/manager/alerts"
+            );
+
+
+        const container =
+            document.getElementById(
+                "alertChart"
+            );
+
+
+        if(!Array.isArray(alerts) ||
+           alerts.length === 0){
+
+            container.innerHTML =
+                `<div class="empty">
+                    No alert data available.
+                </div>`;
+
+            return;
+
+        }
+
+
+        const days = [];
+
+
+        for(
+            let i = 6;
+            i >= 0;
+            i--
+        ){
+
+            const date =
+                new Date();
+
+
+            date.setDate(
+                date.getDate() - i
+            );
+
+
+            date.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            days.push(date);
+
+        }
+
+
+        const counts =
+            days.map(
+                day => {
+
+                    const nextDay =
+                        new Date(day);
+
+
+                    nextDay.setDate(
+                        nextDay.getDate() + 1
+                    );
+
+
+                    return alerts.filter(
+                        alert => {
+
+                            if(!alert.created_at)
+                                return false;
+
+
+                            const date =
+                                new Date(
+                                    alert.created_at
+                                );
+
+
+                            return (
+                                date >= day &&
+                                date < nextDay
+                            );
+
+                        }
+                    ).length;
+
+                }
+            );
+
+
+        const max =
+            Math.max(
+                ...counts,
+                1
+            );
+
+
+        let html = "";
+
+
+        days.forEach(
+            (day,index) => {
+
+                const count =
+                    counts[index];
+
+
+                const height =
+                    count > 0
+                    ? Math.max(
+                        8,
+                        (count / max) * 100
+                    )
+                    : 3;
+
+
+                const label =
+                    day.toLocaleDateString(
+                        undefined,
+                        {
+                            weekday:"short"
+                        }
+                    );
+
+
+                html += `
+
+                    <div class="alert-column">
+
+                        <div class="alert-value">
+                            ${count}
+                        </div>
+
+                        <div
+                            class="alert-bar"
+                            style="height:${height}%"
+                        ></div>
+
+                        <div class="alert-label">
+                            ${label}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        container.innerHTML = html;
+
+    }
+    catch(error){
+
+        console.error(
+            "Alert trend error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PRECURSOR SUMMARY
+===================================================== */
+
+async function loadPrecursorSummary(){
+
+    try{
+
+        const data =
+            await getJSON(
+                "/dashboard/precursors"
+            );
+
+
+        const entries =
+            Object.entries(data || {})
+            .sort(
+                (a,b) =>
+                    Number(b[1]) -
+                    Number(a[1])
+            );
+
+
+        if(!entries.length){
+
+            document.getElementById(
+                "precursorSummary"
+            ).textContent =
+                "No precursor intelligence available.";
+
+            return;
+
+        }
+
+
+        const top =
+            entries[0];
+
+
+        document.getElementById(
+            "precursorSummary"
+        ).innerHTML = `
+
+            <strong
+                style="color:#e8eef7;font-size:18px"
+            >
+                ${esc(top[0])}
+            </strong>
+
+            <br><br>
+
+            Most frequently detected SIF precursor
+
+            <br>
+
+            Detected in
+            <strong>${Number(top[1])}</strong>
+            reports.
+
+            <br><br>
+
+            The AI engine continuously analyzes
+            safety reports to identify patterns
+            that may indicate elevated SIF exposure.
+
+        `;
+
+    }
+    catch(error){
+
+        console.error(
+            "Summary error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   RECENT REPORTS
+===================================================== */
+
+async function loadRecentReports(){
+
+    try{
+
+        const reports =
+            await getJSON(
+                "/dashboard/recent-reports"
+            );
+
+
+        const container =
+            document.getElementById(
+                "recentReports"
+            );
+
+
+        if(!Array.isArray(reports) ||
+           reports.length === 0){
+
+            container.innerHTML =
+                `<div class="empty">
+                    No recent reports.
+                </div>`;
+
+            return;
+
+        }
+
+
+        let html = `
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Report
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            SIF Score
+                        </th>
+
+                        <th>
+                            Risk
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+        `;
+
+
+        reports.slice(0,8)
+        .forEach(
+            report => {
+
+                const text =
+                    report.report_text ||
+                    report.description ||
+                    report.text ||
+                    "Safety report";
+
+
+                const category =
+                    report.category ||
+                    report.report_type ||
+                    "—";
+
+
+                const score =
+                    report.sif_score ??
+                    report.score ??
+                    report.sifScore ??
+                    "—";
+
+
+                const risk =
+                    report.risk_level ||
+                    report.risk ||
+                    "LOW";
+
+
+                html += `
+
+                    <tr>
+
+                        <td>
+                            ${esc(text)}
+                        </td>
+
+                        <td>
+                            ${esc(category)}
+                        </td>
+
+                        <td>
+                            ${esc(score)}
+                            ${
+                                score !== "—"
+                                ? "%"
+                                : ""
+                            }
+                        </td>
+
+                        <td>
+                            ${riskBadge(risk)}
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+
+        html += `
+
+                </tbody>
+
+            </table>
+
+        `;
+
+
+        container.innerHTML = html;
+
+    }
+    catch(error){
+
+        console.error(
+            "Recent reports error:",
+            error
+        );
+
+        document.getElementById(
+            "recentReports"
+        ).innerHTML =
+            `<div class="empty">
+                Could not load recent reports.
+            </div>`;
+
+    }
+
+}
+
+
+/* =====================================================
+   SAMPLE REPORTS
 ===================================================== */
 
 function loadSample(type){
@@ -1928,7 +3311,7 @@ function loadSample(type){
         "During maintenance work, the LOTO procedure was not fully followed and equipment isolation was not independently verified.",
 
         ppe:
-        "A worker was observed without safety gloves while performing a routine low-risk task.",
+        "A worker was observed without safety gloves while performing a routine task.",
 
         fall:
         "A worker was performing work at height and the access scaffold did not have proper protection."
@@ -1943,11 +3326,6 @@ function loadSample(type){
 
 }
 
-
-
-/* =====================================================
-   CLEAR REPORT
-===================================================== */
 
 function clearReport(){
 
@@ -1968,21 +3346,17 @@ function clearReport(){
 }
 
 
-
 /* =====================================================
    ANALYZE REPORT
 ===================================================== */
 
 async function analyzeReport(){
 
-    const textarea =
-        document.getElementById(
-            "reportText"
-        );
-
-
     const text =
-        textarea.value.trim();
+        document
+        .getElementById("reportText")
+        .value
+        .trim();
 
 
     if(!text){
@@ -1997,344 +3371,230 @@ async function analyzeReport(){
 
 
     const button =
-        document.getElementById(
-            "analyzeButton"
+        document.querySelector(
+            "#analyzer .btn"
         );
 
 
-    button.disabled = true;
+    const originalText =
+        button.textContent;
+
 
     button.textContent =
         "ANALYZING...";
 
 
+    button.disabled = true;
+
+
     try{
 
-        const response =
-            await fetch(
+        const data =
+            await postJSON(
                 "/analyze",
                 {
-
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:JSON.stringify({
-
-                        report_text:text
-
-                    })
-
+                    report_text:text,
+                    text:text
                 }
             );
 
 
-        const data =
-            await response.json();
-
-
-        if(!response.ok){
-
-            throw new Error(
-                data.detail ||
-                "Analysis failed"
-            );
-
-        }
-
-
-        /* INVALID REPORT */
-
-        if(data.status === "invalid"){
-
-            document.getElementById(
-                "emptyResult"
-            ).style.display = "none";
-
-
-            document.getElementById(
-                "result"
-            ).style.display = "block";
-
-
-            document.getElementById(
-                "reportId"
-            ).textContent =
-                "--";
-
-
-            const riskElement =
-                document.getElementById(
-                    "riskLevel"
-                );
-
-
-            riskElement.textContent =
-                "INVALID";
-
-
-            riskElement.className =
-                "yellow";
-
-
-            document.getElementById(
-                "category"
-            ).textContent =
-                "Not applicable";
-
-
-            document.getElementById(
-                "precursor"
-            ).textContent =
-                data.message || "";
-
-
-            document.getElementById(
-                "control"
-            ).textContent =
-                data.recommendation || "";
-
-
-            document.getElementById(
-                "aiDetails"
-            ).innerHTML = "";
-
-            return;
-
-        }
-
-
-
-        /* SUCCESS RESULT */
-
         document.getElementById(
             "emptyResult"
-        ).style.display = "none";
+        ).style.display =
+            "none";
 
 
         document.getElementById(
             "result"
-        ).style.display = "block";
+        ).style.display =
+            "block";
+
+
+        const reportId =
+            data.report_id ??
+            data.id ??
+            data.reportId ??
+            "Generated";
+
+
+        const score =
+            data.sif_score ??
+            data.score ??
+            data.sifScore ??
+            data.risk_score ??
+            0;
+
+
+        const risk =
+            String(
+                data.risk_level ??
+                data.risk ??
+                "LOW"
+            ).toUpperCase();
+
+
+        const category =
+            data.category ??
+            data.report_type ??
+            data.type ??
+            "—";
+
+
+        const precursor =
+            data.primary_precursor ??
+            data.precursor ??
+            data.sif_precursor ??
+            "—";
+
+
+        const control =
+            data.recommended_control ??
+            data.control ??
+            data.recommendation ??
+            "Review the finding and apply appropriate safety controls.";
 
 
         document.getElementById(
             "reportId"
         ).textContent =
-            "#" + (
-                data.report_id || "--"
-            );
+            reportId;
 
 
-        const riskElement =
-            document.getElementById(
-                "riskLevel"
-            );
+        document.getElementById(
+            "score"
+        ).textContent =
+            score + "%";
 
 
-        riskElement.textContent =
-            data.risk_level || "--";
+        document.getElementById(
+            "riskLevel"
+        ).textContent =
+            risk;
 
 
-        if(data.risk_level === "HIGH"){
-
-            riskElement.className = "red";
-
-        }
-        else if(data.risk_level === "MEDIUM"){
-
-            riskElement.className = "yellow";
-
-        }
-        else{
-
-            riskElement.className = "green";
-
-        }
+        document.getElementById(
+            "riskLevel"
+        ).className =
+            risk === "HIGH"
+            ? "red"
+            : risk === "MEDIUM"
+            ? "yellow"
+            : "green";
 
 
         document.getElementById(
             "category"
         ).textContent =
-            data.primary_precursor ||
-            "Not detected";
-
-
-        /* PRECURSORS */
-
-        let precursorText =
-            "No significant precursor detected.";
-
-
-        if(
-            data.detected_precursors &&
-            data.detected_precursors.length
-        ){
-
-            precursorText =
-                data.detected_precursors
-                .map(function(item){
-
-                    const keywords =
-                        item.keywords &&
-                        item.keywords.length
-                        ? " (" +
-                          item.keywords.join(", ") +
-                          ")"
-                        : "";
-
-                    return (
-                        item.precursor +
-                        keywords
-                    );
-
-                })
-                .join(" • ");
-
-        }
+            category;
 
 
         document.getElementById(
             "precursor"
         ).textContent =
-            precursorText;
+            precursor;
 
-
-        /* RECOMMENDATION */
 
         document.getElementById(
             "control"
         ).textContent =
-            data.recommendation ||
-            "No recommendation available.";
+            control;
 
 
-        /* AI RESULT */
+        document.getElementById(
+            "aiDetails"
+        ).innerHTML = `
 
-        const aiDetails =
-            document.getElementById(
-                "aiDetails"
-            );
+            <strong>
+                AI Analysis
+            </strong>
 
+            <br><br>
 
-        if(data.ai_result){
+            The NLP engine detected
+            <strong>${esc(precursor)}</strong>
+            as a relevant safety precursor.
 
-            aiDetails.innerHTML = `
+            <br><br>
 
-                <p class="muted">
-                    AI/NLP Result
-                </p>
+            Risk classification:
+            <strong>${esc(risk)}</strong>
 
-                <pre
-                    style="
-                        white-space:pre-wrap;
-                        margin-top:8px;
-                        color:#aebdcd;
-                        font-size:12px;
-                        line-height:1.5;
-                    "
-                >${esc(
-                    JSON.stringify(
-                        data.ai_result,
-                        null,
-                        2
-                    )
-                )}</pre>
-
-            `;
-
-        }
-        else{
-
-            aiDetails.innerHTML = "";
-
-        }
+        `;
 
 
-        /* REFRESH DASHBOARD */
+        /*
+         * Refresh dashboard after successful analysis
+         */
 
         await loadDashboard();
-
-        await loadRiskRegister();
-
-        await loadCorrectiveActions();
-
-        await loadInsights();
-
-        await loadManagerAlerts();
-
 
     }
     catch(error){
 
         console.error(
-            "Analysis error:",
+            "Analyze error:",
             error
         );
 
 
         alert(
-            "Analysis failed: " +
-            error.message
+            "Backend analysis failed.\n\n" +
+            "Make sure FastAPI server is running."
         );
 
     }
     finally{
 
-        button.disabled = false;
-
         button.textContent =
-            "ANALYZE REPORT";
+            originalText;
+
+        button.disabled = false;
 
     }
 
 }
-
 
 
 /* =====================================================
    RISK REGISTER
 ===================================================== */
 
-let allReports = [];
-
-
 async function loadRiskRegister(){
 
     try{
 
-        allReports =
-            await getJSON("/reports");
+        const reports =
+            await getJSON(
+                "/reports"
+            );
 
 
         renderRiskTable(
-            allReports
+            Array.isArray(reports)
+            ? reports
+            : []
         );
 
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Risk register error:",
+            error
+        );
 
         document.getElementById(
             "riskTableContainer"
-        ).innerHTML = `
-            <div class="empty">
+        ).innerHTML =
+            `<div class="empty">
                 Could not load risk register.
-            </div>
-        `;
+            </div>`;
 
     }
 
 }
 
-
-
-/* =====================================================
-   RENDER RISK TABLE
-===================================================== */
 
 function renderRiskTable(reports){
 
@@ -2346,11 +3606,10 @@ function renderRiskTable(reports){
 
     if(!reports.length){
 
-        container.innerHTML = `
-            <div class="empty">
+        container.innerHTML =
+            `<div class="empty">
                 No reports available.
-            </div>
-        `;
+            </div>`;
 
         return;
 
@@ -2361,73 +3620,118 @@ function renderRiskTable(reports){
 
         <table id="riskTable">
 
-            <tr>
+            <thead>
 
-                <th>
-                    ID
-                </th>
+                <tr>
 
-                <th>
-                    Report
-                </th>
+                    <th>
+                        Report
+                    </th>
 
-                <th>
-                    Primary Precursor
-                </th>
+                    <th>
+                        Category
+                    </th>
 
-                <th>
-                    Risk
-                </th>
+                    <th>
+                        Precursor
+                    </th>
 
-                <th>
-                    Created
-                </th>
+                    <th>
+                        SIF Score
+                    </th>
 
-            </tr>
+                    <th>
+                        Risk
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
 
     `;
 
 
-    reports.forEach(function(report){
+    reports.forEach(
+        report => {
 
-        html += `
-
-            <tr>
-
-                <td>
-                    #${esc(report.id)}
-                </td>
-
-                <td>
-                    ${esc(report.report_text)}
-                </td>
-
-                <td>
-                    ${esc(report.primary_precursor)}
-                </td>
-
-                <td>
-                    ${riskBadge(report.risk_level)}
-                </td>
-
-                <td>
-                    ${
-                        report.created_at
-                        ? new Date(
-                            report.created_at
-                          ).toLocaleString()
-                        : "--"
-                    }
-                </td>
-
-            </tr>
-
-        `;
-
-    });
+            const text =
+                report.report_text ||
+                report.description ||
+                report.text ||
+                "Safety report";
 
 
-    html += "</table>";
+            const category =
+                report.category ||
+                report.report_type ||
+                "—";
+
+
+            const precursor =
+                report.primary_precursor ||
+                report.precursor ||
+                "—";
+
+
+            const score =
+                report.sif_score ??
+                report.score ??
+                "—";
+
+
+            const risk =
+                String(
+                    report.risk_level ||
+                    report.risk ||
+                    "LOW"
+                ).toUpperCase();
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${esc(text)}
+                    </td>
+
+                    <td>
+                        ${esc(category)}
+                    </td>
+
+                    <td>
+                        ${esc(precursor)}
+                    </td>
+
+                    <td>
+                        ${
+                            score !== "—"
+                            ? esc(score) + "%"
+                            : "—"
+                        }
+                    </td>
+
+                    <td>
+                        ${riskBadge(risk)}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+    `;
 
 
     container.innerHTML =
@@ -2436,64 +3740,61 @@ function renderRiskTable(reports){
 }
 
 
-
-/* =====================================================
-   FILTER TABLE
-===================================================== */
-
 function filterTable(){
 
     const search =
-        document.getElementById(
-            "search"
-        ).value
-        .toLowerCase()
-        .trim();
+        document
+        .getElementById("search")
+        .value
+        .toLowerCase();
 
 
     const risk =
-        document.getElementById(
-            "riskFilter"
-        ).value;
+        document
+        .getElementById("riskFilter")
+        .value;
 
 
-    const filtered =
-        allReports.filter(
-            function(report){
-
-                const text =
-                    (
-                        report.report_text +
-                        " " +
-                        report.primary_precursor
-                    )
-                    .toLowerCase();
-
-
-                const searchMatch =
-                    text.includes(search);
-
-
-                const riskMatch =
-                    risk === "ALL" ||
-                    report.risk_level === risk;
-
-
-                return (
-                    searchMatch &&
-                    riskMatch
-                );
-
-            }
+    const rows =
+        document.querySelectorAll(
+            "#riskTable tbody tr"
         );
 
 
-    renderRiskTable(
-        filtered
+    rows.forEach(
+        row => {
+
+            const text =
+                row.innerText
+                .toLowerCase();
+
+
+            const rowRisk =
+                row
+                .cells[4]
+                .innerText
+                .toUpperCase();
+
+
+            const matchSearch =
+                text.includes(search);
+
+
+            const matchRisk =
+                risk === "ALL" ||
+                rowRisk === risk;
+
+
+            row.style.display =
+                matchSearch &&
+                matchRisk
+                ? ""
+                : "none";
+
+        }
     );
 
 }
-
 
 
 /* =====================================================
@@ -2516,39 +3817,33 @@ async function loadCorrectiveActions(){
             );
 
 
-        if(!reports.length){
-
-            container.innerHTML = `
-                <div class="empty">
-                    No corrective actions available.
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        const highMedium =
+        const risky =
             reports.filter(
-                function(report){
+                report => {
+
+                    const risk =
+                        String(
+                            report.risk_level ||
+                            report.risk ||
+                            ""
+                        ).toUpperCase();
+
 
                     return (
-                        report.risk_level === "HIGH" ||
-                        report.risk_level === "MEDIUM"
+                        risk === "HIGH" ||
+                        risk === "MEDIUM"
                     );
 
                 }
             );
 
 
-        if(!highMedium.length){
+        if(!risky.length){
 
-            container.innerHTML = `
-                <div class="empty">
-                    No high or medium risk actions currently available.
-                </div>
-            `;
+            container.innerHTML =
+                `<div class="empty">
+                    No corrective actions required.
+                </div>`;
 
             return;
 
@@ -2558,55 +3853,33 @@ async function loadCorrectiveActions(){
         let html = "";
 
 
-        highMedium.forEach(
-            function(report){
+        risky.forEach(
+            report => {
 
-                let recommendation =
-                    "Review the reported condition and reinforce applicable safety controls.";
+                const text =
+                    report.report_text ||
+                    report.description ||
+                    "Safety finding";
+
+
+                const risk =
+                    String(
+                        report.risk_level ||
+                        report.risk ||
+                        "MEDIUM"
+                    ).toUpperCase();
 
 
                 const precursor =
-                    (
-                        report.primary_precursor ||
-                        ""
-                    ).toLowerCase();
+                    report.primary_precursor ||
+                    report.precursor ||
+                    "Safety precursor";
 
 
-                if(
-                    precursor.includes("gas") ||
-                    precursor.includes("containment")
-                ){
-
-                    recommendation =
-                        "Isolate the affected source, verify gas detection and conduct a root-cause investigation.";
-
-                }
-                else if(
-                    precursor.includes("loto") ||
-                    precursor.includes("energy")
-                ){
-
-                    recommendation =
-                        "Stop the activity and verify complete energy isolation before maintenance continues.";
-
-                }
-                else if(
-                    precursor.includes("fall") ||
-                    precursor.includes("height")
-                ){
-
-                    recommendation =
-                        "Inspect access equipment and ensure required fall-protection controls are in place.";
-
-                }
-                else if(
-                    precursor.includes("ppe")
-                ){
-
-                    recommendation =
-                        "Provide immediate correction and reinforce PPE requirements.";
-
-                }
+                const control =
+                    report.recommended_control ||
+                    report.control ||
+                    "Review the finding, stop unsafe activity where required, and implement appropriate controls.";
 
 
                 html += `
@@ -2616,29 +3889,29 @@ async function loadCorrectiveActions(){
                         <div class="action-top">
 
                             <strong>
-                                Report #${esc(report.id)}
+                                ${esc(text)}
                             </strong>
 
-                            ${riskBadge(
-                                report.risk_level
-                            )}
+                            ${riskBadge(risk)}
 
                         </div>
 
-
                         <p>
-                            <b>Precursor:</b>
-                            ${esc(
-                                report.primary_precursor
-                            )}
+                            <strong>
+                                Precursor:
+                            </strong>
+
+                            ${esc(precursor)}
                         </p>
 
-
                         <p>
-                            <b>Recommended Action:</b>
-                            ${esc(
-                                recommendation
-                            )}
+
+                            <strong>
+                                Recommended Action:
+                            </strong>
+
+                            ${esc(control)}
+
                         </p>
 
                     </div>
@@ -2652,24 +3925,17 @@ async function loadCorrectiveActions(){
         container.innerHTML =
             html;
 
-
     }
     catch(error){
 
-        console.error(error);
-
-        document.getElementById(
-            "actionsList"
-        ).innerHTML = `
-            <div class="empty">
-                Could not load corrective actions.
-            </div>
-        `;
+        console.error(
+            "Actions error:",
+            error
+        );
 
     }
 
 }
-
 
 
 /* =====================================================
@@ -2686,120 +3952,30 @@ async function loadManagerAlerts(){
             );
 
 
-        const container =
-            document.getElementById(
-                "alertList"
-            );
-
-
-        if(!alerts.length){
-
-            container.innerHTML = `
-                <div class="empty">
-                    ✅ No unread high-risk alerts.
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        let html = "";
-
-
-        alerts.forEach(
-            function(alert){
-
-                html += `
-
-                    <div class="alert-box">
-
-                        <div class="alert-top">
-
-                            <div>
-
-                                ${riskBadge(
-                                    alert.risk_level
-                                )}
-
-                                <strong
-                                    style="margin-left:8px"
-                                >
-                                    Report #${esc(
-                                        alert.report_id
-                                    )}
-                                </strong>
-
-                            </div>
-
-
-                            <button
-                                class="btn success"
-                                style="margin-top:0"
-                                onclick="markAlertRead(${alert.id})"
-                            >
-                                ✓ Mark as Read
-                            </button>
-
-                        </div>
-
-
-                        <div class="alert-message">
-
-                            ${esc(
-                                alert.message
-                            )}
-
-                        </div>
-
-
-                        <div class="alert-time">
-
-                            ${
-                                alert.created_at
-                                ? new Date(
-                                    alert.created_at
-                                  ).toLocaleString()
-                                : ""
-                            }
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            }
+        renderAlerts(
+            alerts,
+            "alertList"
         );
-
-
-        container.innerHTML =
-            html;
-
 
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Manager alerts error:",
+            error
+        );
 
         document.getElementById(
             "alertList"
-        ).innerHTML = `
-            <div class="empty">
+        ).innerHTML =
+            `<div class="empty">
                 Could not load manager alerts.
-            </div>
-        `;
+            </div>`;
 
     }
 
 }
 
-
-
-/* =====================================================
-   DASHBOARD ALERT PREVIEW
-===================================================== */
 
 async function loadManagerAlertsPreview(){
 
@@ -2811,96 +3987,129 @@ async function loadManagerAlertsPreview(){
             );
 
 
-        const container =
-            document.getElementById(
-                "dashboardAlerts"
-            );
-
-
-        if(!alerts.length){
-
-            container.innerHTML = `
-                <div class="empty">
-                    ✅ No unread high-risk alerts.
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        let html = "";
-
-
-        alerts
-            .slice(0,3)
-            .forEach(
-                function(alert){
-
-                    html += `
-
-                        <div class="alert-box">
-
-                            <div class="alert-top">
-
-                                <div>
-
-                                    ${riskBadge(
-                                        alert.risk_level
-                                    )}
-
-                                    <strong
-                                        style="margin-left:8px"
-                                    >
-                                        Report #${esc(
-                                            alert.report_id
-                                        )}
-                                    </strong>
-
-                                </div>
-
-
-                                <button
-                                    class="btn success"
-                                    style="margin-top:0"
-                                    onclick="markAlertRead(${alert.id})"
-                                >
-                                    Mark Read
-                                </button>
-
-                            </div>
-
-
-                            <div class="alert-message">
-
-                                ${esc(
-                                    alert.message
-                                )}
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-            );
-
-
-        container.innerHTML =
-            html;
-
+        renderAlerts(
+            Array.isArray(alerts)
+            ? alerts.slice(0,5)
+            : [],
+            "dashboardAlerts",
+            true
+        );
 
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Alert preview error:",
+            error
+        );
 
     }
 
 }
 
+
+function renderAlerts(
+    alerts,
+    containerId,
+    preview=false
+){
+
+    const container =
+        document.getElementById(
+            containerId
+        );
+
+
+    if(!Array.isArray(alerts) ||
+       alerts.length === 0){
+
+        container.innerHTML =
+            `<div class="empty">
+                No active manager alerts.
+            </div>`;
+
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    alerts.forEach(
+        alert => {
+
+            const risk =
+                String(
+                    alert.risk_level ||
+                    alert.risk ||
+                    "HIGH"
+                ).toUpperCase();
+
+
+            const message =
+                alert.message ||
+                alert.description ||
+                "High-priority safety finding detected.";
+
+
+            const id =
+                alert.id ??
+                alert.alert_id ??
+                "";
+
+
+            html += `
+
+                <div class="alert">
+
+                    <div class="alert-top">
+
+                        <strong>
+                            ${esc(message)}
+                        </strong>
+
+                        ${riskBadge(risk)}
+
+                    </div>
+
+
+                    ${
+                        alert.report_id
+                        ? `
+                            <p>
+                                Report ID:
+                                ${esc(alert.report_id)}
+                            </p>
+                        `
+                        : ""
+                    }
+
+
+                    ${
+                        !preview
+                        ? `
+                            <button
+                                onclick="markAlertRead('${esc(id)}')"
+                            >
+                                MARK AS READ
+                            </button>
+                        `
+                        : ""
+                    }
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    container.innerHTML =
+        html;
+
+}
 
 
 /* =====================================================
@@ -2909,28 +4118,16 @@ async function loadManagerAlertsPreview(){
 
 async function markAlertRead(alertId){
 
+    if(!alertId)
+        return;
+
+
     try{
 
-        const response =
-            await fetch(
-                `/manager/alerts/${alertId}/read`,
-                {
-                    method:"PATCH"
-                }
-            );
-
-
-        if(!response.ok){
-
-            throw new Error(
-                await response.text()
-            );
-
-        }
-
-
-        alert(
-            "Manager alert marked as read."
+        await patchJSON(
+            "/manager/alerts/" +
+            encodeURIComponent(alertId) +
+            "/read"
         );
 
 
@@ -2938,22 +4135,23 @@ async function markAlertRead(alertId){
 
         await loadManagerAlertsPreview();
 
-        await loadInsights();
-
+        await loadAlertTrend();
 
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Mark alert error:",
+            error
+        );
 
         alert(
-            "Could not update manager alert."
+            "Could not update alert."
         );
 
     }
 
 }
-
 
 
 /* =====================================================
@@ -2982,56 +4180,78 @@ async function loadInsights(){
             );
 
 
+        const entries =
+            Object.entries(
+                precursors || {}
+            )
+            .sort(
+                (a,b) =>
+                    Number(b[1]) -
+                    Number(a[1])
+            );
+
+
+        const top =
+            entries.length
+            ? entries[0][0]
+            : "No data";
+
+
+        document.getElementById(
+            "topPrecursor"
+        ).textContent =
+            top;
+
+
         document.getElementById(
             "insightTotal"
         ).textContent =
-            stats.total_reports || 0;
+            Number(
+                stats.total_reports || 0
+            );
 
 
         document.getElementById(
             "insightHigh"
         ).textContent =
-            stats.high_risk || 0;
+            Number(
+                stats.high_risk || 0
+            );
 
 
         document.getElementById(
             "insightAlerts"
         ).textContent =
-            alerts.length;
+            Array.isArray(alerts)
+            ? alerts.length
+            : 0;
 
 
-        const entries =
-            Object.entries(
-                precursors
-            );
+        document.getElementById(
+            "insightText"
+        ).innerHTML = `
 
+            The AI engine is continuously analyzing
+            reported unsafe acts, unsafe conditions
+            and near-miss observations.
 
-        if(entries.length){
+            <br><br>
 
-            entries.sort(
-                function(a,b){
+            Current leading precursor:
 
-                    return b[1] - a[1];
+            <strong
+                style="color:#e8eef7"
+            >
+                ${esc(top)}
+            </strong>
 
-                }
-            );
+            <br><br>
 
+            High-risk findings should receive
+            priority review by HSE and responsible
+            management teams.
 
-            document.getElementById(
-                "topPrecursor"
-            ).textContent =
-                entries[0][0];
-
-        }
-        else{
-
-            document.getElementById(
-                "topPrecursor"
-            ).textContent =
-                "No data";
-
-        }
-
+        `;
 
     }
     catch(error){
@@ -3046,30 +4266,35 @@ async function loadInsights(){
 }
 
 
-
 /* =====================================================
    INITIAL LOAD
 ===================================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
-    async function(){
+    function(){
 
-        await loadDashboard();
-
-        await loadRiskRegister();
-
-        await loadCorrectiveActions();
-
-        await loadInsights();
-
-        await loadManagerAlerts();
+        loadDashboard();
 
     }
 );
 
 
+/* =====================================================
+   AUTO REFRESH
+===================================================== */
+
+setInterval(
+    function(){
+
+        loadDashboard();
+
+    },
+    30000
+);
+
 </script>
+
 
 </body>
 
